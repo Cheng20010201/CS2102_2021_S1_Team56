@@ -1,22 +1,15 @@
 {
   "name": "cs2102-2021-s1-team56",
   "version": "1.0.0",
-  "description": "Web project on Pet management in CS2102",
+  "description": "",
   "engines": {
     "node": "12.x"
   },
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Cheng20010201/CS2102_2021_S1_Team56.git"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Cheng20010201/CS2102_2021_S1_Team56/issues"
-  },
-  "homepage": "https://github.com/Cheng20010201/CS2102_2021_S1_Team56#readme"
+  "license": "ISC"
 }
