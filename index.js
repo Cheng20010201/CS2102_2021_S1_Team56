@@ -16,7 +16,7 @@ express()
 	.set('views', path.join(__dirname, 'views'))
 	.set('view engine', 'ejs')
 	// .get('/', (req, res) => res.render('pages/index'))
-	.get('/', (req, res) => res.send('Hello, this is CS2102 group 56!'))
+	.get('/', (req, res) => res.send('Hello, this is CS2102 group 56! Hello, this is CS2102 group 56!'))
 	.get('/people', async (req, res) => {
     	  try {
       	    const client = await pool.connect();
