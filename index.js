@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 5000;
 const { Pool } = require('pg');
 const pool = new Pool({
 	// the string below can be substituted with your own postgre information, to get it work locally
-    	connectionString: process.env.DATABASE_URL || 'postgresql://<your postgre local user>:<your password for the user>@localhost:<your local port>/<your test db name>',
+    	connectionString: process.env.DATABASE_URL,// || 'postgresql://<your postgre local user>:<your password for the user>@localhost:<your local port>/<your test db name>',
     	ssl: process.env.DATABASE_URL ? true : false
 })
 
