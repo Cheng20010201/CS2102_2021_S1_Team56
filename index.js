@@ -5,9 +5,13 @@ const PORT = process.env.PORT || 5000;
 // postgre data base connection logic
 const { Pool } = require('pg');
 const pool = new Pool({
-	// the string below can be substituted with your own postgre information, to get it work locally
-    	connectionString: process.env.DATABASE_URL,// || 'postgresql://<your postgre local user>:<your password for the user>@localhost:<your local port>/<your test db name>',
-    	ssl: process.env.DATABASE_URL ? true : false
+	// the commented out part is for local testing
+    	// connectionString: process.env.DATABASE_URL || 'postgresql://api_user:password@localhost:5432/pet_demo',
+    	// ssl: process.env.DATABASE_URL ? true : false;
+	connectionString: process.env.DATABASE_URL,
+ 	ssl: {
+    		rejectUnauthorized: false
+  	}
 })
 
 // main logic
@@ -19,7 +23,7 @@ express()
 	.get('/', (req, res) => res.render('pages/index'))
 	// get hello message
 	.get('/hello', (req, res) => res.send('Hello, this is CS2102 group 56! Hello, this is CS2102 group 56!'))
-	// get all people; DB connection test
+	// get all people
 	.get('/people', async (req, res) => {
     		try {
 			// connection is remote
