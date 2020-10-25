@@ -1,0 +1,15 @@
+Preliminary Constraints 
+1. Each User is identified by email. And it must have a password. A user can be a pet owner, a caretaker and a PSC admin.
+2. Each pet owner is identified by an email referencing that of a user. His/her name and telephone number must be recorded. Other information such as area and credit card numbers are optional.
+3. Each caretaker is identified by an email referencing that of a user.  His/her names, telephone numbers, rating and current number of pets taking care of must be recorded.
+4. A caretaker should be either part time or full time. Full time caretakers can take care of 5 pets. Number of pets part time care-takers can take care depends on ratings.
+5. Each caretaker needs to specify his or her own availability in time.
+6. Each PSC admin is identified by an email referencing that of a user.
+7. A pet owner may own multiple pets, and each pet is dependent on a single pet owner. 
+8. Each pet is identified by its name. A pet must fit into some category and have a name. Special requirements, age and gender are optional for pets.
+9. Each category of pets has a base price set by the clinic.
+10. Each caretaker is capable of taking care of at least one category of pets, each with a daily price.
+11. Each caretaker is paid a salary for a given month of a given year. 
+12. A pet owner can bid for a caretaker to care for a pet he or she owns based on the caretaker’s availability. A pet owner should provide a price for the bid. The bid must record the start day and the duration given by the pet owner. Multiple pet owners can bid for the service of one caretaker. A pet owner can also bid for multiple caretakers.
+13. If a bid is successful, it also needs to record a transfer method (delivering, picking up or meeting at the physical building of PCS) and a payment method (credit card or cash).
+14. After a successful bid, pet owners can leave ratings and reviews for the caretaker. 
