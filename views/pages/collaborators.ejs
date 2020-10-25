@@ -9,13 +9,15 @@
 <% include ../partials/nav.ejs %>
 
 <div class="container">
-<h2>Database Results</h2>
+<br><br>
+<h2 style="text-align:center;">Developers for this project</h2>
+<br>
+<h4 style="text-align:center;">Names are listed in alphabetic order.</h4>
+<br>
 
-<ul>
     <% results.forEach(function(r) { %>
-        <li><%= r.id %> - <%= r.name %></li>
+        <h5 style="text-align:center;"><%= r.name %><br><br></h5>
     <% }); %>
-</ul>
 
 </div>
 
