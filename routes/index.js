@@ -1,4 +1,3 @@
-const express = require('express');
 const HELLO = 'Hello, this is CS2102 group 56!'
 const GET_COLLABORATORS = 'SELECT * FROM collaborators;';
 
