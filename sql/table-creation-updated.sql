@@ -3,7 +3,7 @@ CREATE TABLE collaborators (email VARCHAR PRIMARY KEY, name VARCHAR NOT NULL);
 CREATE TABLE users(
   email VARCHAR PRIMARY KEY, 
   password VARCHAR NOT NULL 
-); 
+);
 
 CREATE TABLE petowner (
   email VARCHAR PRIMARY KEY REFERENCES users(email), 

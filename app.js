@@ -7,21 +7,18 @@ const signup = require('./routes/signup');
 const home = require('./routes/home');
 var app = express();
 
-// this is the port for the whole app, not db
-const PORT = process.env.PORT || 5000; 
+const PORT = process.env.PORT || 5000;
 
-// prepare for pool connection
-// using pool can facilitate multiple concurrent queries
 const { Pool } = require('pg');
-global.pool = new Pool({	
+global.pool = new Pool({
 	// For remote db connection: url in remote db credential doc
-    	connectionString: 'postgres://jwuwspufuqofov:d21784a76a425e1db7df92bee05c2226ac5cfe5143845e4189ab12d2bf4e6357@ec2-54-160-120-28.compute-1.amazonaws.com:5432/d6i27d3prsbgb7',
-    	ssl: {
-    		rejectUnauthorized: false
-    	}
-    // For local db connection: local db url
-    // connectionString: 'postgresql://postgres:abc123456@localhost:5432/project',
-    // ssl: false
+	// connectionString: 'postgres://jwuwspufuqofov:d21784a76a425e1db7df92bee05c2226ac5cfe5143845e4189ab12d2bf4e6357@ec2-54-160-120-28.compute-1.amazonaws.com:5432/d6i27d3prsbgb7',
+	// ssl: {
+	// rejectUnauthorized: false
+	// }
+	// For local db connection: local db url
+	connectionString: 'postgresql://api_user:password@localhost:5432/pet_demo',
+	ssl: false
 });
 
 // main logic
@@ -44,6 +41,6 @@ app.post('/tryLogin', login.tryLogin);
 app.post('/trySignup', signup.trySignup);
 // logged in
 app.get('/home', home.show);
-app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
+app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 
