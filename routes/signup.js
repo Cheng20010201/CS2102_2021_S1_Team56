@@ -11,7 +11,7 @@ exports.trySignup = async (req, res) => {
 			if (password1 != password2) {
 				res.send('Please check your password');
 			} else {
-				const REGISTER_USER = `INSERT INTO users (email, password) VALUES('${email}', '${password2}');`;		
+				const REGISTER_USER = `INSERT INTO users (email, password) VALUES('${email}', '${password2}');`;
 				const success = await client.query(REGISTER_USER);
 				if (success) {
 					res.redirect("/login");
@@ -26,5 +26,5 @@ exports.trySignup = async (req, res) => {
 	} catch (err) {
 		res.send("This email may have been occupied... :(");
 		res.end();
-	}	
+	}
 };

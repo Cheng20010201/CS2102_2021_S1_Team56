@@ -109,6 +109,7 @@ CREATE TABLE period (
 );
 */
 
+
 CREATE TABLE bids (
   startDate DATE,
   endDate DATE,
@@ -123,7 +124,8 @@ CREATE TABLE bids (
   payment_method VARCHAR NOT NULL,
   price NUMERIC(6, 2) NOT NULL,
   PRIMARY KEY (startDate, endDate, ctemail, name, poemail),
-  FOREIGN KEY (startDate, endDate, ctemail) REFERENCES available(startDate, endDate, ctemail),
+  FOREIGN KEY (ctemail, startDate) REFERENCES available(ctemail, at),
+  FOREIGN KEY (ctemail, endDate) REFERENCES available(ctemail, at),
   FOREIGN KEY (name, poemail) REFERENCES pet(name, poemail)
 );
 
