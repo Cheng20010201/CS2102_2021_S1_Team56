@@ -1,7 +1,3 @@
-/**
- * The ejs file already handles: empty input, email format (@) checking;
- * Currently only consider the password to be non-hashed.
- */
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 

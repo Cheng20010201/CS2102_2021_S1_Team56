@@ -1,7 +1,3 @@
-/**
- * The ejs file already handles: empty input, email format (@) checking;
- * Currently only consider the password to be non-hashed.
- */
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -10,20 +6,28 @@ exports.tryLogin = async (req, res) => {
 		const client = await global.pool.connect();
 		var email = req.body.userEmail;
 		var password = req.body.userPassword;
-		const CHECK_USER_EXISTS = `SELECT 1 FROM users WHERE email='${email}' AND password='${password}';`;
-		const result = await client.query(CHECK_USER_EXISTS);
-		const results = { 'results': (result) ? result.rows : null };
-		if (results["results"].length === 0) {
-			res.redirect('/hello');
-			client.release();
+
+		if (email && password) {
+			const CHECK_USER_EXISTS = `SELECT 1 FROM users WHERE email='${email}' AND password='${password}';`;
+			const result = await client.query(CHECK_USER_EXISTS);
+			const results = { 'results': (result) ? result.rows : null };
+			if (results["results"].length === 0) {
+				res.send('Incorrect email and/or Password.');
+				client.release();
+			} else {
+				req.session.loggedin = true;
+				req.session.email = email;
+				res.redirect('/home');
+				client.release();
+			}
+
 		} else {
-			res.redirect('/home');
-			client.release();
-			res.end();
+			res.send('Please enter email and Password.');
 		}
+		res.end();
 	} catch (err) {
 		console.log(err);
-		res.redirect('/home');
+		res.send('Unexpected error.');
 	}
 };
 
