@@ -17,7 +17,7 @@ exports.tryLogin = async (req, res) => {
 			} else {
 				req.session.loggedin = true;
 				req.session.email = email;
-				res.redirect('/home');
+				res.redirect('/user');
 				client.release();
 			}
 
@@ -30,5 +30,3 @@ exports.tryLogin = async (req, res) => {
 		res.send('Unexpected error.');
 	}
 };
-
-

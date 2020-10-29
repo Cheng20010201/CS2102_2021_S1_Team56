@@ -7,6 +7,7 @@ const index = require('./routes/index');
 const login = require('./routes/login');
 const signup = require('./routes/signup');
 const home = require('./routes/home');
+const user = require('./routes/user');
 
 var app = express();
 
@@ -47,6 +48,8 @@ app.get('/login', index.login);
 app.get('/logout', index.logout);
 // signup page
 app.get('/signup', index.signup);
+// show user profile, if logged in
+app.get('/user', user.show);
 // user login
 app.post('/tryLogin', login.tryLogin);
 // user signup
