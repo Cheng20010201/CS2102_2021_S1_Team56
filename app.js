@@ -16,15 +16,15 @@ const PORT = process.env.PORT || 5000;
 const { Pool } = require('pg');
 global.pool = new Pool({
 	// remote
-	/*
+	
 	connectionString: 'postgres://jwuwspufuqofov:d21784a76a425e1db7df92bee05c2226ac5cfe5143845e4189ab12d2bf4e6357@ec2-54-160-120-28.compute-1.amazonaws.com:5432/d6i27d3prsbgb7',
 	ssl: {
 		rejectUnauthorized: false
 	}
-	*/
+	
 	// local
-	connectionString: 'postgresql://api_user:password@localhost:5432/pet_demo',
-	ssl: false
+	// connectionString: 'postgresql://api_user:password@localhost:5432/pet_demo',
+	// ssl: false
 });
 
 // main logic
