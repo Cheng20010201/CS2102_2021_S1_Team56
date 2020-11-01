@@ -4,10 +4,12 @@
 exports.tryLogin = async (req, res) => {
 	try {
 		const client = await global.pool.connect();
+		console.log(req.body);
 		var email = req.body.userEmail;
 		var password = req.body.userPassword;
-
-		if (email && password) {
+		var type = req.body.userType;
+		
+		if (email && password && type) {
 			const CHECK_USER_EXISTS = `SELECT 1 FROM users WHERE email='${email}' AND password='${password}';`;
 			const result = await client.query(CHECK_USER_EXISTS);
 			const results = { 'results': (result) ? result.rows : null };
@@ -17,12 +19,12 @@ exports.tryLogin = async (req, res) => {
 			} else {
 				req.session.loggedin = true;
 				req.session.email = email;
-				res.redirect('/user');
+				res.redirect(`/${type}`);
 				client.release();
 			}
 
 		} else {
-			res.send('Please enter email and Password.');
+			res.send('Please enter all information.');
 		}
 		res.end();
 	} catch (err) {

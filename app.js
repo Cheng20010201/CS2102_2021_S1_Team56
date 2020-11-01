@@ -6,7 +6,9 @@ var session = require('express-session');
 const index = require('./routes/index');
 const login = require('./routes/login');
 const signup = require('./routes/signup');
-const home = require('./routes/home');
+const petOwner = require('./routes/petowner');
+const careTaker = require('./routes/caretaker');
+const admin = require('./routes/admin');
 const user = require('./routes/user');
 
 var app = express();
@@ -17,19 +19,20 @@ const { Pool } = require('pg');
 global.pool = new Pool({
 	// remote
 	
-	// connectionString: 'postgres://jwuwspufuqofov:d21784a76a425e1db7df92bee05c2226ac5cfe5143845e4189ab12d2bf4e6357@ec2-54-160-120-28.compute-1.amazonaws.com:5432/d6i27d3prsbgb7',
-	// ssl: {
-	// 	rejectUnauthorized: false
-	// }
+	connectionString: 'postgres://jwuwspufuqofov:d21784a76a425e1db7df92bee05c2226ac5cfe5143845e4189ab12d2bf4e6357@ec2-54-160-120-28.compute-1.amazonaws.com:5432/d6i27d3prsbgb7',
+	ssl: {
+	 	rejectUnauthorized: false
+	}
 	
 	// local
-	connectionString: 'postgresql://api_user:password@localhost:5432/pet_demo',
-	ssl: false
+	// connectionString: 'postgresql://api_user:password@localhost:5432/pet_demo',
+	// connectionString: 'postgresql://postgres:abc123456@localhost:5432/project',
+	// ssl: false
 });
 
 // main logic
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({
 	secret: 'secret',
 	resave: true,
@@ -54,6 +57,9 @@ app.get('/user', user.show);
 app.post('/tryLogin', login.tryLogin);
 // user signup
 app.post('/trySignup', signup.trySignup);
-// logged in
-app.get('/home', home.show);
+// redirect after logged in
+app.get('/petOwner', petOwner.show);
+app.get('/careTaker', careTaker.show);
+app.get('/admin', admin.show);
+
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));

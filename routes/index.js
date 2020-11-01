@@ -3,12 +3,14 @@ const GET_COLLABORATORS = 'SELECT * FROM collaborators;';
 
 // homepage
 exports.home = (req, res) => {
+	/*
 	if (req.session.loggedin) {
 		res.send('Welcome back, ' + req.session.email + '.');
 	} else {
 		res.send('Please login.');
 	}
-	// res.render('pages/index');
+	*/
+	res.render('pages/index');
 	res.end();
 };
 
