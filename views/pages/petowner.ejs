@@ -2,13 +2,36 @@
 <html>
 <head>
   <% include ../partials/header.ejs %>
+  <style>
+    .po-function {
+      width: 400px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .po-function h4 {
+      text-align: center;
+			font-size: 24px;
+			padding: 20px 0 20px 0;
+			font-family: Arial, Helvetica, sans-serif;
+    }
+
+  </style>
 </head>
 
 <body>
 
   <% include ../partials/nav.ejs %>
   <br><br><br>
-  <h2 style="text-align:center;"> Logged In </h2>
+  <h1 style="text-align:center;"> My Home Page </h1>
+  <br><br><br>
+  <div class="po-function">
+    <h4><a href="/petowner/bid"> Book Pet Cares </a></h4>
+    <h4><a href="/petowner/profile"> My Profile </a></h4>
+    <h4><a href="/petowner/pets"> My Pets </a></h4>
+    <h4><a href="/petowner/history"> My History </a></h4>
+    
+  </div>
 
 </body>
 </html>

@@ -62,4 +62,9 @@ app.get('/petOwner', petOwner.show);
 app.get('/careTaker', careTaker.show);
 app.get('/admin', admin.show);
 
+// functions for pet owners
+app.get('/petOwner/profile', petOwner.profile);
+app.post('/petOwner/saveProfile', petOwner.saveProfile);
+app.get('/petOwner/history', petOwner.history);
+
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));

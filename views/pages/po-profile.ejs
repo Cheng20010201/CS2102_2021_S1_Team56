@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include ../partials/header.ejs %>
+  <style>
+    .profile {
+      width: 400px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .profile h1 {
+      text-align: center;
+			color: #4d4d4d;
+			font-size: 30px;
+			padding: 20px 0 20px 0;
+			font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .profile input[type="text"], 
+    .profile input[type="tel"] {
+			width: 75%;
+			padding: 20px;
+			border: 3px solid#d9ccee;
+			margin-bottom: 20px;
+			box-sizing: border-box;
+		}
+
+  </style>
+</head>
+
+<body>
+
+  <% include ../partials/nav.ejs %>
+  <br><br><br>
+  <div class="profile">
+    <h1 style="text-align:center;"> My Profile </h1>
+    <form action="/petOwner/saveProfile" method="POST">
+      <pre>
+        <input type="text" name="userName" placeholder="My Name" value='<%=user.name%>'>
+        <input type="text" name="userArea" placeholder="My Living Area" value='<%=user.area%>'>
+        <input type="tel" id="potel" name="userTel" placeholder="My Telephone" value='<%=user.tel%>'>
+      </pre>
+      <br><br>
+      <input type="submit" class="btn btn-lg btn-primary" 
+        style="background-color: #532f8c;">
+      <a type="button" class="btn btn-lg btn-primary" 
+        style="background-color: #4d4d4d;" 
+        href="/petowner"></span> Return </a>
+    </form>
+  </div>
+
+</body>
+</html>
