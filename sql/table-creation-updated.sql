@@ -19,6 +19,7 @@ CREATE TABLE caretaker (
   phonenum VARCHAR(8) NOT NULL, 
   rating NUMERIC CHECK(rating IS NULL OR (0 <= rating AND rating <= 5)), 
   /*petnum INTEGER NOT NULL CHECK(0 <= petnum AND petnum<= 5), */
+  maxpetnum INTEGER NOT NULL CHECK(0 <= maxpetnum AND maxpetnum <= 5),
   timetype VARCHAR(9) NOT NULL CHECK( 
     timetype = 'full time' 
     OR timetype = 'part time' 

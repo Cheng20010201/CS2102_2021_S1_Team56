@@ -1,5 +1,5 @@
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
+//const bcrypt = require('bcrypt');
+//const saltRounds = 10;
 
 exports.trySignup = async (req, res) => {
 	try {
