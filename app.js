@@ -6,7 +6,9 @@ var session = require('express-session');
 const index = require('./routes/index');
 const login = require('./routes/login');
 const signup = require('./routes/signup');
-const home = require('./routes/home');
+const petOwner = require('./routes/petowner');
+const careTaker = require('./routes/caretaker');
+const admin = require('./routes/admin');
 const user = require('./routes/user');
 
 var app = express();
@@ -23,7 +25,8 @@ global.pool = new Pool({
 	}
 	*/
 	// local
-	connectionString: 'postgresql://api_user:password@localhost:5432/pet_demo',
+	// connectionString: 'postgresql://api_user:password@localhost:5432/pet_demo',
+	connectionString: 'postgresql://postgres:abc123456@localhost:5432/project',
 	ssl: false
 });
 
@@ -55,5 +58,7 @@ app.post('/tryLogin', login.tryLogin);
 // user signup
 app.post('/trySignup', signup.trySignup);
 // logged in
-app.get('/home', home.show);
+app.get('/petOwner', petOwner.show);
+app.get('/careTaker', careTaker.show);
+app.get('/admin', admin.show);
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
