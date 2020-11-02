@@ -80,4 +80,5 @@ exports.history = (req, res) => {
 	} else {
 		res.redirect("/login");
 	}
+	res.end();
 }
