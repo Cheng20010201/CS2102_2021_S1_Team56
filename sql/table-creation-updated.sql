@@ -10,7 +10,7 @@ CREATE TABLE petowner (
   pname VARCHAR NOT NULL, 
   phonenum VARCHAR(8) NOT NULL, 
   creditnum VARCHAR, 
-  area VARCHAR 
+  area VARCHAR NOT NULL
 );
 
 CREATE TABLE caretaker (
@@ -24,7 +24,7 @@ CREATE TABLE caretaker (
     timetype = 'full time' 
     OR timetype = 'part time' 
   ), 
-  area VARCHAR
+  area VARCHAR NOT NULL
 );
 
 CREATE TABLE pscadmin (

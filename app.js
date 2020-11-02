@@ -18,21 +18,21 @@ const PORT = process.env.PORT || 5000;
 const { Pool } = require('pg');
 global.pool = new Pool({
 	// remote
-	
+
 	connectionString: 'postgres://jwuwspufuqofov:d21784a76a425e1db7df92bee05c2226ac5cfe5143845e4189ab12d2bf4e6357@ec2-54-160-120-28.compute-1.amazonaws.com:5432/d6i27d3prsbgb7',
 	ssl: {
-	 	rejectUnauthorized: false
+		rejectUnauthorized: false
 	}
-	
+
 	// local
-	// connectionString: 'postgresql://api_user:password@localhost:5432/pet_demo',
+	//connectionString: 'postgresql://api_user:password@localhost:5432/pet_demo',
 	// connectionString: 'postgresql://postgres:abc123456@localhost:5432/project',
-	// ssl: false
+	//ssl: false
 });
 
 // main logic
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
 	secret: 'secret',
 	resave: true,
@@ -55,8 +55,13 @@ app.get('/signup', index.signup);
 app.get('/user', user.show);
 // user login
 app.post('/tryLogin', login.tryLogin);
-// user signup
-app.post('/trySignup', signup.trySignup);
+// pet owner/care taker signup
+app.post('/trySignupPo', signup.trySignupPo);
+app.post('/trySignupCt', signup.trySignupCt);
+// choose user type to sign up
+app.post('/signUpInit', signup.signUpInit);
+
+
 // redirect after logged in
 app.get('/petOwner', petOwner.show);
 app.get('/careTaker', careTaker.show);

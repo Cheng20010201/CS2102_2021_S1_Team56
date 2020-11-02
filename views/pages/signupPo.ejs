@@ -26,6 +26,14 @@
 			box-sizing: border-box;
 		}
 
+		.login-form input[type="text"] {
+			width: 100%;
+			padding: 20px;
+			border: 3px solid#d9ccee;
+			margin-bottom: 20px;
+			box-sizing: border-box;
+		}
+
 		.login-form label {
 			text-align: left;
 			width: 100%;
@@ -57,11 +65,15 @@
 	<% include ../partials/nav.ejs %>
 	<br><br><br>
 	<div class="login-form">
-		<h1>Become a member!</h1>
-		<form action="/trySignup" method="POST">
+		<h1>Join us as a pet owner!</h1>
+		<form action="/trySignupPo" method="POST">
 			<input type="email" name="userEmail" placeholder="Email" required>
 			<input type="password" name="userPassword" placeholder="Password" required>
 			<input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+			<input type="text" name="userName" placeholder="Name" required>
+			<input type="text" name="phoneNum" placeholder="Phone Number" required>
+			<input type="text" name="area" placeholder="Area" required>
+			<input type="text" name="creditNum" placeholder="Optional: credit card number">
 			<input type="submit">
 		</form>
 	</div>

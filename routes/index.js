@@ -32,7 +32,7 @@ exports.aboutus = async (req, res) => {
 // login page
 exports.login = (req, res) => res.render('pages/login');
 // signup page
-exports.signup = (req, res) => res.render('pages/signup');
+exports.signup = (req, res) => res.render('pages/signup_init');
 // logout procedure
 exports.logout = (req, res) => {
 	req.session.loggedin = false;
