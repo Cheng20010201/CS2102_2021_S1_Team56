@@ -70,7 +70,13 @@ app.get('/admin', admin.show);
 app.get('/petOwner/profile', petOwner.profile);
 app.post('/petOwner/saveProfile', petOwner.saveProfile);
 app.get('/petOwner/history', petOwner.history);
+app.get('/petOwner/review/:id', petOwner.review);
+app.post('/petOwner/review/saveReview', petOwner.saveReview);
 app.get('/petOwner/pets', petOwner.pets);
+app.get('/petOwner/addpet', petOwner.addPet);
+app.get('/petOwner/pets/:id', petOwner.petsProfile);
+app.post('/petOwner/pets/saveProfile', petOwner.savePetProfile);
+app.post('/petOwner/pets/addProfile', petOwner.addPetProfile);
 app.get('/petOwner/bids', petOwner.book);
 app.post('/petOwner/bids/searchCareTaker', petOwner.searchCareTaker);
 

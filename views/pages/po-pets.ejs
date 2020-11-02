@@ -41,6 +41,7 @@
             <tr>
                 <th>Number</th>
                 <th>Name</th>
+                <th>Type</th>
                 <th>Gender</th>
                 <th>Age</th>
                 <th>Special Requirement</th>
@@ -55,6 +56,7 @@
             <tr>
                 <td><%=i; %></td>
                 <td><%=data.name %></td>
+                <td><%=data.type %></td>
                 <td><%=data.gender %></td>
                 <td><%=data.age %></td>
                 <td><%=data.specreq %></td>
@@ -67,7 +69,11 @@
                 </tr>
             <% } %>
         </table>
-        </div>
-
+      <br><br>
+      <div style="text-align: center;">
+        <a style="font-size: large;" href="/petOwner/addpet"></span> Add Pet </a>
+      </div>
+      </div>
+      
 </body>
 </html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <% include ../partials/header.ejs %>
+  <style>
+    .review {
+      width: 600px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .review h1 {
+      text-align: center;
+      color: #4d4d4d;
+      font-size: 30px;
+      padding: 20px 0 20px 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .review input[type="number"] {
+      width: 100%;
+      padding: 20px;
+      border: 3px solid#d9ccee;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+
+    .review input[type="text"] {
+      width: 100%;
+      padding: 20px;
+      height: 100px;
+      border: 3px solid#d9ccee;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+
+    .review label {
+			text-align: left;
+			width: 100%;
+			color: #4d4d4d;
+			font-size: 16px;
+			font-weight: lighter;
+			font-family: Arial, Helvetica, sans-serif;
+			margin-bottom: 20px;
+		}
+  </style>
+</head>
+
+<body>
+
+  <% include ../partials/nav.ejs %>
+  <br><br><br>
+  <div class="review">
+    <h1 style="text-align:center;"> Leave a Review </h1>
+    <form action="/petOwner/review/saveReview" method="POST">
+      <pre style="background-color: #ffffff; border: 0ch;">
+        <label> Rating: </label><br>
+        <input type="number" name="rating" placeholder="Rating (0-5)" value='<%=user.rating%>' required>
+        <label> Review: </label><br>
+        <input type="text" name="review" placeholder="Review" value='<%=user.review%>'>
+      </pre>
+      <br><br>
+      <input type="submit" class="btn btn-lg btn-primary" style="background-color: #532f8c;">
+      <a type="button" class="btn btn-lg btn-primary" style="background-color: #4d4d4d;" href="/petowner/history"></span> Return </a>
+    </form>
+  </div>
+
+</body>
+
+</html>
