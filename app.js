@@ -25,9 +25,9 @@ global.pool = new Pool({
 	}
 
 	// local
-	//connectionString: 'postgresql://api_user:password@localhost:5432/pet_demo',
+	// connectionString: 'postgresql://api_user:password@localhost:5432/pet_demo',
 	// connectionString: 'postgresql://postgres:abc123456@localhost:5432/project',
-	//ssl: false
+	// ssl: false
 });
 
 // main logic
@@ -60,7 +60,6 @@ app.post('/trySignupPo', signup.trySignupPo);
 app.post('/trySignupCt', signup.trySignupCt);
 // choose user type to sign up
 app.post('/signUpInit', signup.signUpInit);
-
 
 // redirect after logged in
 app.get('/petOwner', petOwner.show);

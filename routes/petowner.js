@@ -1,54 +1,83 @@
 exports.show = (req, res) => {
-	res.render("pages/petowner");
+	if (req.session.loggedin) {
+		res.render("pages/petowner");
+	} else {
+		res.redirect("/login");
+	}
 };
 
-exports.profile = (req, res) => {
-	
-	// retrive user data
-	
-	var tempUser = {
-		name: 'Adi',
-		area: 'Kent Ridge',
-		tel: 12345678
+exports.profile = async (req, res) => {
+	if (req.session.loggedin) {
+		// retrive user data
+		try {
+			const client = await global.pool.connect();
+			var GET_USER = `SELECT * FROM petowner WHERE email='${req.session.email}'`;
+			var result = await client.query(GET_USER);
+			var tempUser = (result.rows)[0];
+			// since "saveProfiel" must be done after "getProfile", 
+			// then we can just store the data in session for later usage
+			req.session.profileData = tempUser
+			res.render("pages/po-profile", { user: tempUser });
+		} catch (err) {
+			res.end();
+		}
+	} else {
+		res.redirect("/login");
 	}
-	res.render("pages/po-profile", {user: tempUser});
 };
 
-exports.saveProfile = (req, res) => {
-	try{
-		console.log(req.body);
-		var name = req.body.userName;
-		var area = req.body.userArea;
-		var tel = req.body.userTel;
-		// save user profile
-
-		res.redirect('/petowner');
-	} catch (err) {
-		console.log(err);
-		res.send('Unexpected error.');
+exports.saveProfile = async (req, res) => {
+	if (req.session.loggedin) {
+		try {
+			// to update values
+			var pname = req.body.userName;
+			var area = req.body.userArea;
+			var phonenum = req.body.userTel;
+			var creditnum = req.body.userCreditNum;
+			if (phonenum.length !== 8) {
+				res.send('Phone number can only be 8 digits long.');
+			} else if (!(pname && area && phonenum)) {
+				res.send('Name, area, phone number cannot be left blank.');
+			} else {
+				// be able to update
+				const client = await global.pool.connect();
+				const UPDATE = `UPDATE petowner SET pname='${pname}', area='${area}', phonenum='${phonenum}', creditnum='${creditnum}' WHERE email='${req.session.email}';`;
+				await client.query(UPDATE);
+				res.redirect('/petOwner');
+			}
+		} catch (err) {
+			console.log(err);
+			res.send('Update failure.');
+		}
+	} else {
+		res.redirect("/login");
 	}
+	res.end();
 }
 
 exports.history = (req, res) => {
-	
-	// retrive user data
-	
-	var tempHistory = [
-		{
-			pet: 'Pikachu',
-			date: '2020-01-01',
-			duration: 3,
-			caretaker: 'adi',
-			price: 20,
-			id: 1
-		}, {
-			pet: 'Mewtwo',
-			date: '2020-06-01',
-			duration: 5,
-			caretaker: 'adi',
-			price: 30,
-			id: 2
-		}
-	]
-	res.render("pages/po-history", {title: "User List", userData: tempHistory});
+
+	if (req.session.loggedin) {
+		// retrive user data
+		var tempHistory = [
+			{
+				pet: 'Pikachu',
+				date: '2020-01-01',
+				duration: 3,
+				caretaker: 'adi',
+				price: 20,
+				id: 1
+			}, {
+				pet: 'Mewtwo',
+				date: '2020-06-01',
+				duration: 5,
+				caretaker: 'adi',
+				price: 30,
+				id: 2
+			}
+		]
+		res.render("pages/po-history", { title: "User List", userData: tempHistory });
+	} else {
+		res.redirect("/login");
+	}
 }

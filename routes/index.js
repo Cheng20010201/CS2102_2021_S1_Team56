@@ -3,14 +3,12 @@ const GET_COLLABORATORS = 'SELECT * FROM collaborators;';
 
 // homepage
 exports.home = (req, res) => {
-	/*
+
 	if (req.session.loggedin) {
-		res.send('Welcome back, ' + req.session.email + '.');
+		res.redirect(`/${req.session.type}`);
 	} else {
-		res.send('Please login.');
+		res.render("pages/index");
 	}
-	*/
-	res.render('pages/index');
 	res.end();
 };
 
@@ -37,6 +35,7 @@ exports.signup = (req, res) => res.render('pages/signup_init');
 exports.logout = (req, res) => {
 	req.session.loggedin = false;
 	req.session.email = undefined;
+	req.session.type = undefined;
 	res.redirect('/');
 	res.end;
 };
