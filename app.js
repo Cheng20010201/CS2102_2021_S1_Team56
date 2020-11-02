@@ -71,5 +71,7 @@ app.get('/petOwner/profile', petOwner.profile);
 app.post('/petOwner/saveProfile', petOwner.saveProfile);
 app.get('/petOwner/history', petOwner.history);
 app.get('/petOwner/pets', petOwner.pets);
+app.get('/petOwner/bids', petOwner.book);
+app.post('/petOwner/bids/searchCareTaker', petOwner.searchCareTaker);
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));

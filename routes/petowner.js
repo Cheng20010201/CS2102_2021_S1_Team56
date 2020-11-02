@@ -107,3 +107,25 @@ exports.pets = (req, res) => {
 		res.redirect("/login");
 	}
 }
+
+exports.book = (req, res) => {
+	if (req.session.loggedin) {
+		res.render("pages/po-book");
+	} else {
+		res.redirect("/login");
+	}
+};
+
+exports.searchCareTaker = (req, res) => {
+	if (req.session.loggedin) {
+		console.log(req.body);
+		var date = req.body.startDate;
+		var duration = req.body.duration;
+		var price = req.body.price;
+		var transfer = req.body.transfer;
+		var payment = req.body.payment;
+		res.render("pages/po-select-ct");
+	} else {
+		res.redirect("/login");
+	}
+}

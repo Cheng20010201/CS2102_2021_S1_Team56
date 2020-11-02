@@ -36,11 +36,11 @@
   <div class="profile">
     <h1 style="text-align:center;"> My Profile </h1>
     <form action="/petOwner/saveProfile" method="POST">
-      <pre>
-        Name: <input type="text" name="userName" placeholder="My Name" value='<%=user.pname%>' required>
-        Area: <input type="text" name="userArea" placeholder="My Living Area" value='<%=user.area%>' required>
+      <pre style="background-color: #ffffff; border: 0ch;">
+        User Name: <input type="text" name="userName" placeholder="My Name" value='<%=user.pname%>' required>
+        Living Area: <input type="text" name="userArea" placeholder="My Living Area" value='<%=user.area%>' required>
         Credit Card: <input type="text" name="userCreditNum" placeholder="My credit card number" value='<%=user.creditnum%>'>
-        Telephone: <input type="tel" id="potel" name="userTel" placeholder="My Telephone" value='<%=user.phonenum%>' required>        
+        Tel Number: <input type="tel" id="potel" name="userTel" placeholder="My Telephone" value='<%=user.phonenum%>' required>        
       </pre>
       <br><br>
       <input type="submit" class="btn btn-lg btn-primary" style="background-color: #532f8c;">
