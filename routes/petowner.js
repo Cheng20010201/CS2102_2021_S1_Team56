@@ -80,5 +80,30 @@ exports.history = (req, res) => {
 	} else {
 		res.redirect("/login");
 	}
-	res.end();
+}
+
+
+exports.pets = (req, res) => {
+
+	if (req.session.loggedin) {
+		// retrive user data
+		var tempPets = [
+			{
+				name: 'Pikachu',
+				gender: 'male',
+				age: 3,
+				specreq: 'charge regularly',
+				id: 1
+			}, {
+				name: 'Squitle',
+				gender: 'female',
+				age: 2,
+				specreq: '',
+				id: 2
+			}
+		]
+		res.render("pages/po-pets", { title: "User List", userData: tempPets });
+	} else {
+		res.redirect("/login");
+	}
 }
