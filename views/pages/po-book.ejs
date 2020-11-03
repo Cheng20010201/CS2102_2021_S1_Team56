@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <% include ../partials/header.ejs %>
+  <style>
+    .book {
+      width: 600px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .book h1 {
+      text-align: center;
+      color: #4d4d4d;
+      font-size: 30px;
+      padding: 20px 0 20px 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .book label {
+			text-align: left;
+			width: 100%;
+			color: #4d4d4d;
+			font-size: 16px;
+			font-weight: lighter;
+			font-family: Arial, Helvetica, sans-serif;
+			margin-bottom: 20px;
+		}
+
+		.book input[type="radio"] {
+			width: 10%;
+		}
+
+    .book input[type="date"],
+    .book input[type="number"] {
+      width: 100%;
+      padding: 20px;
+      border: 3px solid#d9ccee;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+
+    .book input[type="submit"] {
+			width: 100%;
+			padding: 20px;
+			background-color: #532F8C;
+			border: 0;
+			box-sizing: border-box;
+			cursor: pointer;
+			font-weight: bold;
+			color: #ffffff;
+		}
+  </style>
+</head>
+
+<body>
+
+  <% include ../partials/nav.ejs %>
+  <br><br><br>
+  <div class="book">
+    <h1 style="text-align:center;"> Book a Pet Care </h1>
+    <form action="/petOwner/bids/searchCareTaker" method="POST">
+      <label> Date: </label><br>
+      <input type="date" name="startDate" required> <br>
+      <label> Duration: </label><br>
+      <input type="number" name="duration" placeholder="Duration (Days)" required> <br>
+      <label> Price Offer: </label><br>
+      <input type="number" name="price" placeholder="Price (S$)" required> <br>
+      <label>
+        Transfer method: <br><br>
+				<input type="radio" name="transfer" value="deliver" required> Delivery
+				<input type="radio" name="transfer" value="pickup" required> Pick Up
+				<input type="radio" name="transfer" value="physical" required> Physical Building	
+      </label>
+      <label>
+        Payment method: <br><br>
+				<input type="radio" name="payment" value="card" required> Card
+				<input type="radio" name="payment" value="cash" required> Cash
+			</label>  
+      <br><br>
+      <input type="submit">
+      </a>
+    </form>
+  </div>
+
+</body>
+
+</html>

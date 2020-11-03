@@ -19,7 +19,7 @@
     }
 
     .profile input[type="text"],
-    .profile input[type="tel"] {
+    .profile input[type="number"] {
       width: 75%;
       padding: 20px;
       border: 3px solid#d9ccee;
@@ -34,18 +34,18 @@
   <% include ../partials/nav.ejs %>
   <br><br><br>
   <div class="profile">
-    <h1 style="text-align:center;"> My Profile </h1>
-    <form action="/petOwner/saveProfile" method="POST">
+    <h1 style="text-align:center;"> My Pet Profile </h1>
+    <form action="/petOwner/pets/saveProfile" method="POST">
       <pre style="background-color: #ffffff; border: 0ch;">
-        User Name: <input type="text" name="userName" placeholder="My Name" value='<%=user.pname%>' required>
-        Living Area: <input type="text" name="userArea" placeholder="My Living Area" value='<%=user.area%>' required>
-        Credit Card: <input type="text" name="userCreditNum" placeholder="My credit card number" value='<%=user.creditnum%>'>
-        Tel Number: <input type="tel" id="potel" name="userTel" placeholder="My Telephone" value='<%=user.phonenum%>' required>        
+        Name: <input type="text" name="petName" placeholder="Pet Name" value='<%=user.name%>' required>
+        Type: <input type="text" name="petType" placeholder="Pet Type" value='<%=user.type%>' required>
+        Gender: <input type="text" name="petGender" placeholder="Pet Gender" value='<%=user.gender%>'>
+        Age: <input type="number" name="petAge" placeholder="Pet Age" value='<%=user.age%>'>
+        Remark: <input type="text" name="specReq" placeholder="Special Requirement" value='<%=user.specreq%>'>        
       </pre>
       <br><br>
       <input type="submit" class="btn btn-lg btn-primary" style="background-color: #532f8c;">
-      <a type="button" class="btn btn-lg btn-primary" style="background-color: #4d4d4d;" href="/petowner"></span> Return
-      </a>
+      <a type="button" class="btn btn-lg btn-primary" style="background-color: #4d4d4d;" href="/petowner/pets"></span> Return </a>
     </form>
   </div>
 

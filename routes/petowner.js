@@ -82,6 +82,36 @@ exports.history = (req, res) => {
 	}
 }
 
+exports.review = (req, res) => {
+	if (req.session.loggedin) {
+		// retrive user data
+		var tempReview = {
+			rating: 4,
+			review: 'my Pikachu was taken good care of'
+			}
+		res.render("pages/po-review", { user: tempReview });
+	} else {
+		res.redirect("/login");
+	}
+}
+
+exports.saveReview = (req, res) => {
+	if (req.session.loggedin) {
+		try {
+			// to update values
+			console.log(req.body);
+			var rating = req.body.rating;
+			var review = req.body.review;
+
+		} catch (err) {
+			console.log(err);
+			res.send('Update failure.');
+		}
+	} else {
+		res.redirect("/login");
+	}
+}
+
 
 exports.pets = (req, res) => {
 
@@ -90,12 +120,14 @@ exports.pets = (req, res) => {
 		var tempPets = [
 			{
 				name: 'Pikachu',
+				type: 'mouse',
 				gender: 'male',
 				age: 3,
 				specreq: 'charge regularly',
 				id: 1
 			}, {
 				name: 'Squitle',
+				type: 'turtle',
 				gender: 'female',
 				age: 2,
 				specreq: '',
@@ -103,6 +135,92 @@ exports.pets = (req, res) => {
 			}
 		]
 		res.render("pages/po-pets", { title: "User List", userData: tempPets });
+	} else {
+		res.redirect("/login");
+	}
+}
+
+exports.petsProfile = (req, res) => {
+	if (req.session.loggedin) {
+		var tempPet = {
+			name: 'Pikachu',
+			type: 'mouse',
+			gender: 'male',
+			age: 3,
+			specreq: 'charge regularly',
+			id: 1
+		}
+		res.render("pages/po-pet-profile", { user: tempPet });
+	} else {
+		res.redirect("/login");
+	}
+};
+
+exports.addPet = (req, res) => {
+	if (req.session.loggedin) {
+		res.render("pages/po-addpet");
+	} else {
+		res.redirect("/login");
+	}
+};
+
+exports.addPetProfile = (req, res) => {
+	if (req.session.loggedin) {
+		try {
+			// to update values
+			console.log(req.body);
+			var name = req.body.petName;
+			var type = req.body.petType;
+			var gender = req.body.petGender;
+			var age = req.body.petAge;
+			var specreq = req.body.specReq;
+			
+		} catch (err) {
+			console.log(err);
+			res.send('Update failure.');
+		}
+	} else {
+		res.redirect("/login");
+	}
+}
+
+exports.savePetProfile = (req, res) => {
+	if (req.session.loggedin) {
+		try {
+			// to update values
+			console.log(req.body);
+			var name = req.body.petName;
+			var type = req.body.petType;
+			var gender = req.body.petGender;
+			var age = req.body.petAge;
+			var specreq = req.body.specReq;
+			
+		} catch (err) {
+			console.log(err);
+			res.send('Update failure.');
+		}
+	} else {
+		res.redirect("/login");
+	}
+}
+
+exports.book = (req, res) => {
+	if (req.session.loggedin) {
+		res.render("pages/po-book");
+	} else {
+		res.redirect("/login");
+	}
+};
+
+exports.searchCareTaker = (req, res) => {
+	if (req.session.loggedin) {
+		console.log(req.body);
+		var date = req.body.startDate;
+		var duration = req.body.duration;
+		var price = req.body.price;
+		var transfer = req.body.transfer;
+		var payment = req.body.payment;
+		res.render("pages/po-select-ct");
 	} else {
 		res.redirect("/login");
 	}
