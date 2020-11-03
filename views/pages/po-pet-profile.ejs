@@ -39,13 +39,14 @@
       <pre style="background-color: #ffffff; border: 0ch;">
         Name: <input type="text" name="petName" placeholder="Pet Name" value='<%=user.name%>' required>
         Type: <input type="text" name="petType" placeholder="Pet Type" value='<%=user.type%>' required>
-        Gender: <input type="text" name="petGender" placeholder="Pet Gender" value='<%=user.gender%>'>
+        Gender: <input type="text" name="petGender" placeholder="Pet Gender" value=<%=user.gender? 'male': 'female'%>>
         Age: <input type="number" name="petAge" placeholder="Pet Age" value='<%=user.age%>'>
-        Remark: <input type="text" name="specReq" placeholder="Special Requirement" value='<%=user.specreq%>'>        
+        Remark: <input type="text" name="specReq" placeholder="Special Requirement" value='<%=user.req%>'>
       </pre>
       <br><br>
       <input type="submit" class="btn btn-lg btn-primary" style="background-color: #532f8c;">
-      <a type="button" class="btn btn-lg btn-primary" style="background-color: #4d4d4d;" href="/petowner/pets"></span> Return </a>
+      <a type="button" class="btn btn-lg btn-primary" style="background-color: #4d4d4d;" href="/petowner/pets"></span>
+        Return </a>
     </form>
   </div>
 

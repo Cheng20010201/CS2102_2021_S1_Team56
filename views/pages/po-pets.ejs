@@ -1,33 +1,41 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <% include ../partials/header.ejs %>
-  <style> 
-    table, td, th { 
-     border: 3px solid#d9ccee; 
-     text-align: left; 
-     margin: auto;
-    } 
+  <style>
+    table,
+    td,
+    th {
+      border: 3px solid#d9ccee;
+      text-align: left;
+      margin: auto;
+    }
+
     h1 {
       text-align: center;
-			color: #4d4d4d;
-			font-size: 30px;
-			padding: 20px 0 20px 0;
-			font-family: Arial, Helvetica, sans-serif;
+      color: #4d4d4d;
+      font-size: 30px;
+      padding: 20px 0 20px 0;
+      font-family: Arial, Helvetica, sans-serif;
     }
-    table { 
-     border-collapse: collapse; 
-     width: 50%; 
-    } 
-    .table-data{ 
-     position: relative; 
-     left:150px; 
-     top:100px; 
-    } 
-    th, td { 
-     padding: 15px; 
-    } 
-    </style>
+
+    table {
+      border-collapse: collapse;
+      width: 50%;
+    }
+
+    .table-data {
+      position: relative;
+      left: 150px;
+      top: 100px;
+    }
+
+    th,
+    td {
+      padding: 15px;
+    }
+  </style>
 
 </head>
 
@@ -37,43 +45,45 @@
   <br><br><br>
   <div class="table-data">
     <h1 style="text-align:center;"> My Pets </h1>
-        <table border="1">
-            <tr>
-                <th>Number</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Gender</th>
-                <th>Age</th>
-                <th>Special Requirement</th>
-                <th>Action</th>
-            </tr>
-            
-            <%
+    <table border="1">
+      <tr>
+        <th>Number</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Gender</th>
+        <th>Age</th>
+        <th>Special Requirement</th>
+        <th>Action</th>
+      </tr>
+
+      <%
             if(userData.length!=0){
             var i=1;
             userData.forEach(function(data){
             %>
-            <tr>
-                <td><%=i; %></td>
-                <td><%=data.name %></td>
-                <td><%=data.type %></td>
-                <td><%=data.gender %></td>
-                <td><%=data.age %></td>
-                <td><%=data.specreq %></td>
-                <td><a href="/petowner/pets/<%=data.id%>"> Edit </a></td>
-            </tr>
-            <%  i++; }) %>
-            <% } else{ %>
-                <tr>
-                    <td colspan="7">No Data Found</td>
-                </tr>
-            <% } %>
-        </table>
-      <br><br>
-      <div style="text-align: center;">
-        <a style="font-size: large;" href="/petOwner/addpet"></span> Add Pet </a>
-      </div>
-      </div>
-      
+      <tr>
+        <td><%=i; %></td>
+        <td><%=data.name %></td>
+        <td><%=data.type %></td>
+        <td><%=data.gender?'male':'female' %></td>
+        <td><%=data.age %></td>
+        <td><%=data.req %></td>
+        <td><a href="/petowner/pets/<%=data.name%>">
+            Edit </a></td>
+      </tr>
+      <%  i++; }) %>
+      <% } else{ %>
+      <tr>
+        <td colspan="7">No Data Found</td>
+      </tr>
+      <% } %>
+    </table>
+    <br><br>
+    <div style="text-align: center;">
+      <a style="font-size: large;" href="/petOwner/addpet"></span> Add Pet </a>
+    </div>
+  </div>
+
 </body>
+
 </html>

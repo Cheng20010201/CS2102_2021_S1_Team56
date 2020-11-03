@@ -74,7 +74,7 @@ app.get('/petOwner/review/:id', petOwner.review);
 app.post('/petOwner/review/saveReview', petOwner.saveReview);
 app.get('/petOwner/pets', petOwner.pets);
 app.get('/petOwner/addpet', petOwner.addPet);
-app.get('/petOwner/pets/:id', petOwner.petsProfile);
+app.get('/petOwner/pets/:name', petOwner.petsProfile);
 app.post('/petOwner/pets/saveProfile', petOwner.savePetProfile);
 app.post('/petOwner/pets/addProfile', petOwner.addPetProfile);
 app.get('/petOwner/bids', petOwner.book);

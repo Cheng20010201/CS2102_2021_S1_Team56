@@ -110,7 +110,6 @@ CREATE TABLE period (
 );
 */
 
-
 CREATE TABLE bids (
   startDate DATE,
   endDate DATE,

@@ -1,5 +1,7 @@
-const GET_COLLABORATORS = 'SELECT * FROM collaborators;';
-
 exports.show = (req, res) => {
-	res.render("pages/admin");
+	if (req.session.loggedin) {
+		res.render("pages/admin");
+	} else {
+		res.redirect("/login");
+	}
 };

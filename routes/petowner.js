@@ -88,7 +88,7 @@ exports.review = (req, res) => {
 		var tempReview = {
 			rating: 4,
 			review: 'my Pikachu was taken good care of'
-			}
+		}
 		res.render("pages/po-review", { user: tempReview });
 	} else {
 		res.redirect("/login");
@@ -113,44 +113,35 @@ exports.saveReview = (req, res) => {
 }
 
 
-exports.pets = (req, res) => {
+exports.pets = async (req, res) => {
 
 	if (req.session.loggedin) {
 		// retrive user data
-		var tempPets = [
-			{
-				name: 'Pikachu',
-				type: 'mouse',
-				gender: 'male',
-				age: 3,
-				specreq: 'charge regularly',
-				id: 1
-			}, {
-				name: 'Squitle',
-				type: 'turtle',
-				gender: 'female',
-				age: 2,
-				specreq: '',
-				id: 2
-			}
-		]
-		res.render("pages/po-pets", { title: "User List", userData: tempPets });
+		try {
+			const client = await global.pool.connect();
+			var GET_PET = `SELECT * FROM pet WHERE poemail='${req.session.email}'`;
+			var result = await client.query(GET_PET);
+			var pets = result.rows;
+			res.render("pages/po-pets", { title: "User List", userData: pets });
+		} catch (err) {
+			console.log(err);
+			res.send("Possible database error.");
+		}
 	} else {
 		res.redirect("/login");
 	}
 }
 
-exports.petsProfile = (req, res) => {
+exports.petsProfile = async (req, res) => {
 	if (req.session.loggedin) {
-		var tempPet = {
-			name: 'Pikachu',
-			type: 'mouse',
-			gender: 'male',
-			age: 3,
-			specreq: 'charge regularly',
-			id: 1
-		}
-		res.render("pages/po-pet-profile", { user: tempPet });
+		const client = await global.pool.connect();
+		var name = req.params.name;
+		var GET_SINGLE_PET = `SELECT * FROM pet WHERE poemail='${req.session.email}' AND name='${name}';`;
+		var result = await client.query(GET_SINGLE_PET);
+		var pet = (result.rows)[0];
+		// for future usage
+		req.session.currentPet = name;
+		res.render("pages/po-pet-profile", { user: pet });
 	} else {
 		res.redirect("/login");
 	}
@@ -164,40 +155,49 @@ exports.addPet = (req, res) => {
 	}
 };
 
-exports.addPetProfile = (req, res) => {
+exports.addPetProfile = async (req, res) => {
 	if (req.session.loggedin) {
 		try {
 			// to update values
-			console.log(req.body);
 			var name = req.body.petName;
 			var type = req.body.petType;
-			var gender = req.body.petGender;
+			var gender = req.body.petGender == 'male' ? 'TRUE' : req.body.petGender === undefined ? 'UNKNOWN' : 'FALSE';
 			var age = req.body.petAge;
 			var specreq = req.body.specReq;
-			
+			const client = await global.pool.connect();
+			// here we assume the type already has an entry in table "category"
+			var ADD_PET;
+			if (gender != 'UNKNOWN') {
+				ADD_PET = `INSERT INTO pet(name, poemail, type, gender, age, req) VALUES('${name}', '${req.session.email}', '${type}', ${gender}, ${age}, '${specreq}');`;
+			} else {
+				ADD_PET = `INSERT INTO pet(name, poemail, type, age, req) VALUES('${name}', '${req.session.email}', '${type}', ${age}, '${specreq}');`;
+			}
+			await client.query(ADD_PET);
+			res.redirect('/petOwner');
 		} catch (err) {
 			console.log(err);
-			res.send('Update failure.');
+			res.send('Add failure; probably because you specified a non-existing type or you have duplicate pet names.');
 		}
 	} else {
 		res.redirect("/login");
 	}
 }
 
-exports.savePetProfile = (req, res) => {
+exports.savePetProfile = async (req, res) => {
 	if (req.session.loggedin) {
 		try {
-			// to update values
-			console.log(req.body);
 			var name = req.body.petName;
 			var type = req.body.petType;
-			var gender = req.body.petGender;
+			var gender = req.body.petGender == 'male' ? 'TRUE' : req.body.petGender === undefined ? 'UNKNOWN' : 'FALSE';
 			var age = req.body.petAge;
 			var specreq = req.body.specReq;
-			
+			const client = await global.pool.connect();
+			var UPDATE_PET = `UPDATE pet SET name='${name}', type='${type}', gender=${gender}, age=${age}, req='${specreq}' WHERE poemail='${req.session.email}' AND name='${req.session.currentPet}';`;
+			await client.query(UPDATE_PET);
+			res.redirect('/petOwner');
 		} catch (err) {
 			console.log(err);
-			res.send('Update failure.');
+			res.send('Update failure; probably because you specified a non-existing type or you have duplicate pet names.');
 		}
 	} else {
 		res.redirect("/login");
@@ -220,6 +220,16 @@ exports.searchCareTaker = (req, res) => {
 		var price = req.body.price;
 		var transfer = req.body.transfer;
 		var payment = req.body.payment;
+		// the one who initiates this service must be a pet owner
+		var bidInfo = { date: date, duration: duration, price: price, transfer: transfer, payment: payment };
+		bidInfo.date = date;
+		bidInfo.duration = duration;
+		bidInfo.price = price;
+		bidInfo.transfer = transfer;
+		bidInfo.payment = payment;
+		// wrap all information in the 'session', for future usage
+		req.session.bidInfo = bidInfo;
+		console.log(req.session.bidInfo);
 		res.render("pages/po-select-ct");
 	} else {
 		res.redirect("/login");
