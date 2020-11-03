@@ -229,7 +229,6 @@ exports.searchCareTaker = (req, res) => {
 		bidInfo.payment = payment;
 		// wrap all information in the 'session', for future usage
 		req.session.bidInfo = bidInfo;
-		console.log(req.session.bidInfo);
 		
 		// get available caretakers based on bidInfo
 		var caretakers = [
@@ -250,10 +249,9 @@ exports.searchCareTaker = (req, res) => {
 }
 
 exports.selectCareTaker = (req, res) => {
-	if (req.session.loggedin) {
-		
-		// get the selected care taker
-		
+	if (req.session.loggedin) {		
+		// get the selected care taker		
+		console.log(req.session.bidInfo);
 		res.redirect("/petOwner/bidinfo");
 
 	} else {

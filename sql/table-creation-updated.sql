@@ -79,11 +79,12 @@ CREATE TABLE available (
 );
 
 CREATE TABLE caretaker_cares_at (
-    ctemail VARCHAR REFERENCES caretaker(email),
-    at DATE NOT NULL REFERENCES available(at),
-    pet_owner VARCHAR,
-    pet_name VARCHAR,
-    FOREIGN KEY (pet_owner, pet_name) REFERENCES pet(poemail, name)
+    ctemail VARCHAR NOT NULL,
+    at DATE NOT NULL,
+    pet_owner VARCHAR NOT NULL,
+    pet_name VARCHAR NOT NULL,
+    FOREIGN KEY (pet_owner, pet_name) REFERENCES pet(poemail, name),
+    FOREIGN KEY (ctemail, at) REFERENCES available(ctemail, at)
 );
 
 
