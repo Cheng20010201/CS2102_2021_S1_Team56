@@ -17,8 +17,8 @@ WHERE NEW.ctemail = email;
 -- SET petnum = 3 
 -- WHERE NEW.ctemail = email 
 --   AND timetype = 'part time'; 
-RETURN NEW; 
-ELSIF rates > 4 
+RETURN NEW;
+ELSIF rates > 4
 AND rates <= 4.5 THEN 
 UPDATE caretaker 
 SET rating = rates 

@@ -55,27 +55,13 @@ exports.saveProfile = async (req, res) => {
 	res.end();
 }
 
-exports.history = (req, res) => {
+exports.history = async (req, res) => {
 
 	if (req.session.loggedin) {
 		// retrive user data
-		var tempHistory = [
-			{
-				pet: 'Pikachu',
-				date: '2020-01-01',
-				duration: 3,
-				caretaker: 'adi',
-				price: 20,
-				id: 1
-			}, {
-				pet: 'Mewtwo',
-				date: '2020-06-01',
-				duration: 5,
-				caretaker: 'adi',
-				price: 30,
-				id: 2
-			}
-		]
+		const client = await global.pool.connect();
+		const GET_BIDS = `SELECT b.name, b.startdate, b.duration, b.ctemail, b.price FROM bids as b WHERE b.poemail='${req.session.email}' and b.success=true;`;
+		const tempHistory = (await client.query(GET_BIDS)).rows;
 		res.render("pages/po-history", { title: "User List", userData: tempHistory });
 	} else {
 		res.redirect("/login");
@@ -229,7 +215,7 @@ exports.searchCareTaker = (req, res) => {
 		bidInfo.payment = payment;
 		// wrap all information in the 'session', for future usage
 		req.session.bidInfo = bidInfo;
-		
+
 		// get available caretakers based on bidInfo
 		var caretakers = [
 			{
@@ -249,7 +235,7 @@ exports.searchCareTaker = (req, res) => {
 }
 
 exports.selectCareTaker = (req, res) => {
-	if (req.session.loggedin) {		
+	if (req.session.loggedin) {
 		// get the selected care taker		
 		console.log(req.session.bidInfo);
 		res.redirect("/petOwner/bidinfo");
@@ -263,14 +249,14 @@ exports.bidInfo = (req, res) => {
 	if (req.session.loggedin) {
 		// show stored values
 		var tempBid = [{
-			date: 2020-01-01,
+			date: 2020 - 01 - 01,
 			duration: 5,
 			price: 40,
 			transfer: 'deliver',
 			payment: 'cash',
 			caretaker: 'adi'
 		}]
-		res.render("pages/po-bidinfo",  { title: "User List", userData: tempBid });
+		res.render("pages/po-bidinfo", { title: "User List", userData: tempBid });
 
 	} else {
 		res.redirect("/login");
