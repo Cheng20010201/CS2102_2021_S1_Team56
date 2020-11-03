@@ -230,8 +230,60 @@ exports.searchCareTaker = (req, res) => {
 		// wrap all information in the 'session', for future usage
 		req.session.bidInfo = bidInfo;
 		console.log(req.session.bidInfo);
-		res.render("pages/po-select-ct");
+		
+		// get available caretakers based on bidInfo
+		var caretakers = [
+			{
+				name: "adi",
+				rating: 4.5,
+				area: "Kent Ridge"
+			}, {
+				name: "aaron",
+				rating: 4.3,
+				area: "Downtown Core"
+			}
+		]
+		res.render("pages/po-select-ct", { title: "User List", userData: caretakers });
 	} else {
 		res.redirect("/login");
 	}
 }
+
+exports.selectCareTaker = (req, res) => {
+	if (req.session.loggedin) {
+		
+		// get the selected care taker
+		
+		res.redirect("/petOwner/bidinfo");
+
+	} else {
+		res.redirect("/login");
+	}
+};
+
+exports.bidInfo = (req, res) => {
+	if (req.session.loggedin) {
+		// show stored values
+		var tempBid = [{
+			date: 2020-01-01,
+			duration: 5,
+			price: 40,
+			transfer: 'deliver',
+			payment: 'cash',
+			caretaker: 'adi'
+		}]
+		res.render("pages/po-bidinfo",  { title: "User List", userData: tempBid });
+
+	} else {
+		res.redirect("/login");
+	}
+};
+
+exports.confirmBidInfo = (req, res) => {
+	if (req.session.loggedin) {
+		// write stored values into db
+		res.redirect("/petOwner");
+	} else {
+		res.redirect("/login");
+	}
+};
