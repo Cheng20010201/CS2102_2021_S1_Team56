@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <% include ../partials/header.ejs %>
+  <style>
+    table,
+    td,
+    th {
+      border: 3px solid#d9ccee;
+      text-align: left;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4d4d4d;
+      font-size: 30px;
+      padding: 20px 0 20px 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 50%;
+    }
+
+    .table-data {
+      position: relative;
+      left: 150px;
+      top: 100px;
+    }
+
+    th,
+    td {
+      padding: 15px;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <% include ../partials/nav.ejs %>
+  <br><br><br>
+  <div class="table-data">
+    <h1 style="text-align:center;"> My Booking Info </h1>
+    <table border="1">
+      <tr>
+        <th>Number</th>
+        <th>Date</th>
+        <th>Duration</th>
+        <th>Price</th>
+        <th>Transfer</th>
+        <th>Payment</th>
+        <th>Care Taker</th>
+        <th>Confirm</th>
+      </tr>
+
+      <%
+            if(userData.length!=0){
+            var i=1;
+            userData.forEach(function(data){
+            %>
+      <tr>
+        <td><%=i; %></td>
+        <td><%=data.date %></td>
+        <td><%=data.duration %></td>
+        <td><%=data.price %></td>
+        <td><%=data.transfer %></td>
+        <td><%=data.payment %></td>
+        <td><%=data.caretaker %></td>
+        <td><a href="/petowner/bidinfo/confirm">
+            Confirm </a></td>
+      </tr>
+      <%  i++; }) %>
+      <% } else{ %>
+      <tr>
+        <td colspan="7">No Data Found</td>
+      </tr>
+      <% } %>
+    </table>
+    <br><br>
+  </div>
+
+</body>
+
+</html>

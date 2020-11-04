@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include ../partials/header.ejs %>
+</head>
+
+<body>
+
+<% include ../partials/nav.ejs %>
+
+<div class="container">
+<br><br>
+<h2 style="text-align:center;">Developers for this project</h2>
+<br>
+<h4 style="text-align:center;">Names are listed in alphabetic order.</h4>
+<br>
+
+    <% results.forEach(function(r) { %>
+        <h5 style="text-align:center;"><%= r.name %><br><br></h5>
+    <% }); %>
+
+</div>
+
+</body>
+</html>
