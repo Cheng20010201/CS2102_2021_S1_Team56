@@ -1,3 +1,7 @@
 exports.show = (req, res) => {
-	res.render("pages/caretaker");
+    if (req.session.loggedin) {
+        res.render("pages/caretaker");
+    } else {
+        res.redirect("/login");
+    }
 };

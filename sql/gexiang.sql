@@ -74,15 +74,64 @@ CREATE TRIGGER updatePets
 --makes bid automatically successful if caretaker is free
 CREATE OR REPLACE FUNCTION autoAccept() RETURNS TRIGGER AS $$
 BEGIN
-    IF 
-    UPDATE bids
-    SET success = TRUE
-    WHERE 
+    IF (SELECT COUNT(*)
+        FROM NEW INNER JOIN caretaker ON caretaker.email = NEW.ctemail
+        WHERE caretaker.timetype = 'full time') > 0
+    THEN
+        UPDATE bids
+        SET success = TRUE;
+    END IF;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER autoAccept
     AFTER INSERT ON bids
     FOR EACH ROW
-    WHEN (SELECT caretaker.timetype FROM caretaker WHERE caretaker.email = NEW.ctemail) = 'full time'
     EXECUTE FUNCTION autoAccept();
+
+--maintain non-overlap between admin and po/ct
+CREATE OR REPLACE FUNCTION adminOverlap() RETURNS TRIGGER AS $$
+DECLARE ctx NUMERIC;
+BEGIN
+    SELECT COUNT(*) INTO ctx
+    FROM petowner, caretaker
+    WHERE NEW.email = petowner.email OR NEW.email = caretaker.email;
+    IF ctx > 0 THEN
+        RETURN NULL;
+    ELSE
+        RETURN NEW;
+    END IF; 
+END;
+$$ LANGUAGE plpgsql;
+    
+
+CREATE TRIGGER adminOverlap
+    BEFORE INSERT OR UPDATE ON pcsadmin
+    FOR EACH ROW EXECUTE FUNCTION adminOverlap();
+
+--maintain covering constraint
+CREATE OR REPLACE FUNCTION cover() RETURNS TRIGGER AS $$
+DECLARE ctx NUMERIC;
+BEGIN
+    SELECT COUNT(*) INTO ctx
+    FROM users
+    WHERE users.email = NEW.email;
+    IF ctx > 0 THEN
+        RETURN NEW;
+    ELSE
+        RETURN NULL;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER coverAdmin
+    BEFORE INSERT OR UPDATE ON pcsadmin
+    FOR EACH ROW EXECUTE FUNCTION cover();
+
+CREATE TRIGGER coverPO
+    BEFORE INSERT OR UPDATE ON petowner
+    FOR EACH ROW EXECUTE FUNCTION cover();
+
+CREATE TRIGGER coverCT
+    BEFORE INSERT OR UPDATE ON caretaker
+    FOR EACH ROW EXECUTE FUNCTION cover();
