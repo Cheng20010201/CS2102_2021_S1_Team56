@@ -2,13 +2,36 @@
 <html>
 <head>
   <% include ../partials/header.ejs %>
+  <style>
+    .ct-function {
+      width: 400px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .ct-function h4 {
+      text-align: center;
+			font-size: 24px;
+			padding: 20px 0 20px 0;
+			font-family: Arial, Helvetica, sans-serif;
+    }
+
+  </style>
 </head>
 
 <body>
 
   <% include ../partials/nav.ejs %>
   <br><br><br>
-  <h2 style="text-align:center;"> Logged In </h2>
+  <h1 style="text-align:center;"> My Home Page </h1>
+  <br><br><br>
+  <div class="ct-function">
+    <h4><a href="/caretaker/bids"> Manage My Bids </a></h4>
+    <h4><a href="/caretaker/profile"> My Profile </a></h4>
+    <h4><a href="/caretaker/salary"> My Salary </a></h4>
+    <h4><a href="/caretaker/history"> My History </a></h4>
+    
+  </div>
 
 </body>
 </html>

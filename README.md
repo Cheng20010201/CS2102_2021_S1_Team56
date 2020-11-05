@@ -1,7 +1,7 @@
 # CS2102 2021 S1 Team56
 
 Web project with a backend for CS2102 20/21 Sem 1
-## Project Details
+
 ## Project Report
 
 The project report, along with the preliminary constraints can be found [here](https://docs.google.com/document/d/1bPF4ZJQTEm7NJvsOS0Q6sHlAe5rM7mlJFJt5Sf1nTTg/edit?usp=sharing).

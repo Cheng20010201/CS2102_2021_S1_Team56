@@ -36,6 +36,28 @@
 			font-family: Arial, Helvetica, sans-serif;
 			margin-bottom: 20px;
 		}
+
+    table,
+    td,
+    th {
+      border: 3px solid#d9ccee;
+      text-align: left;
+      margin: left;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .table-data {
+      margin: auto;
+    }
+
+    th,
+    td {
+      padding: 15px;
+    }
   </style>
 </head>
 
@@ -45,18 +67,29 @@
   <br><br><br>
   <div class="profile">
     <h1 style="text-align:center;"> My Profile </h1>
-    <form action="/petOwner/saveProfile" method="POST">
-      <label>User Name:</label><br>
-      <input type="text" name="userName" placeholder="My Name" value='<%=user.pname%>' required>
-      <label>Living Area:</label><br>
+    <form action="/careTaker/saveProfile" method="POST">
+      <label>User Name:</label>
+      <input type="text" name="userName" placeholder="My Name" value='<%=user.cname%>' required>
+      <label>Living Area:</label>
       <input type="text" name="userArea" placeholder="My Living Area" value='<%=user.area%>' required>
-      <label>Credit Card:</label><br>
-      <input type="text" name="userCreditNum" placeholder="My credit card number" value='<%=user.creditnum%>'>
-      <label>Tel Number:</label><br>
-      <input type="tel" name="userTel" placeholder="My Telephone" value='<%=user.phonenum%>' required>        
+      <label>Tel Number:</label>
+      <input type="tel" name="userTel" placeholder="My Telephone" value='<%=user.phonenum%>' required>      
+      <label>Other Information:</label>
+      <table border="1" class="table-data">
+        <tr>
+          <th>Work Time</th>
+          <th>Rating</th>
+          <th>Pet Count</th>
+        </tr>
+        <tr>
+          <td><%=user.worktime%></td>
+          <td><%=user.rating%></td>
+          <td><%=user.petnum%></td>
+        </tr>
+      </table>  
       <br><br>
       <input type="submit" class="btn btn-lg btn-primary" style="background-color: #532f8c;">
-      <a type="button" class="btn btn-lg btn-primary" style="background-color: #4d4d4d;" href="/petowner"></span> Return
+      <a type="button" class="btn btn-lg btn-primary" style="background-color: #4d4d4d;" href="/caretaker"></span> Return
       </a>
     </form>
   </div>

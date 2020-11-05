@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <% include ../partials/header.ejs %>
+  <style>
+    table,
+    td,
+    th {
+      border: 3px solid#d9ccee;
+      text-align: left;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4d4d4d;
+      font-size: 30px;
+      padding: 20px 0 20px 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 50%;
+    }
+
+    .table-data {
+      position: relative;
+      left: 150px;
+      top: 100px;
+    }
+
+    th,
+    td {
+      padding: 15px;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <% include ../partials/nav.ejs %>
+  <br><br><br>
+  <div class="table-data">
+    <h1 style="text-align:center;"> My Salary </h1>
+    <table border="1">
+      <tr>
+        <th>Number</th>
+        <th>Month</th>
+        <th>Salary</th>
+      </tr>
+
+      <%
+            if(userData.length!=0){
+            var i=1;
+            userData.forEach(function(data){
+            %>
+      <tr>
+        <td><%=i; %></td>
+        <td><%=data.month %></td>
+        <td><%=data.salary?data.salary: 0 %></td>
+      </tr>
+      <%  i++; }) %>
+      <% } else{ %>
+      <tr>
+        <td colspan="7">No Data Found</td>
+      </tr>
+      <% } %>
+    </table>
+  </div>
+
+</body>
+
+</html>
