@@ -204,3 +204,24 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER check_price
 BEFORE
 INSERT ON capable FOR EACH ROW EXECUTE PROCEDURE check_price();
+                                 
+-- Before inserting to bids, check if creditnum exists for card payment option;
+CREATE OR REPLACE FUNCTION check_creditnum() RETURNS TRIGGER AS $$
+DECLARE num VARCHAR;
+BEGIN
+    SELECT creditnum into num
+    FROM petowner
+    WHERE email = NEW.poemail;
+    IF NEW.payment_method = 'card' AND (num IS NULL OR length(num) = 0) THEN
+        RAISE NOTICE '%', num;
+        RAISE EXCEPTION 'no credit card number';
+    ELSE
+        RAISE NOTICE '%', num;
+        RETURN NEW;
+    END IF;
+END
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER check_creditnum
+BEFORE
+INSERT ON bids FOR EACH ROW EXECUTE PROCEDURE check_creditnum();
