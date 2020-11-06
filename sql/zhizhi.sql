@@ -80,6 +80,7 @@ DECLARE mail VARCHAR;
 DECLARE timetype VARCHAR;
 DECLARE max INT;
 DECLARE count INT;
+DECLARE capable BOOLEAN;
 BEGIN
     SELECT s.email, s.timetype, s.maxpetnum into mail, timetype, max
     FROM caretaker as s
@@ -97,15 +98,19 @@ BEGIN
 
     SELECT count = NEW.endDate - NEW.startDate + 1 into available_2;
 
-    IF unavailable IS NOT NULL OR NOT available_2 THEN
+    SELECT COUNT(*) IS NOT NULL into capable
+    FROM capable c
+    WHERE c.ctemail = mail AND c.type = (SELECT type FROM pet WHERE pet.name = NEW.name);
+
+    IF unavailable IS NOT NULL OR NOT available_2 OR NOT capable THEN
         NEW.success = false;
 --         RAISE NOTICE 'check % and % and %', unavailable, available_2, count;
         RETURN NEW;
-    ELSIF unavailable IS NULL AND available_2 AND timetype = 'part time' THEN
+    ELSIF unavailable IS NULL AND available_2 AND capable AND timetype = 'part time' THEN
 --         RAISE NOTICE 'check % and %', unavailable, available_2;
         NEW.success = null;
         RETURN NEW;
-    ELSIF unavailable IS NULL AND available_2 AND timetype = 'full time' THEN
+    ELSIF unavailable IS NULL AND available_2 AND capable AND timetype = 'full time' THEN
 --         RAISE NOTICE 'check % and %', unavailable, available_2;
         NEW.success = true;
         INSERT INTO caretaker_cares_at
@@ -114,7 +119,7 @@ BEGIN
         RETURN NEW;
     ELSE
         RAISE exception 'unexpected behaviour % % % %', unavailable IS NULL, available_2, count, timetype
-            USING hint = 'please check if timetype is "part time" or "full time" % % %';
+            USING hint = 'please check if timetype is "part time" or "full time" and is capable of this type of pet.';
     END IF;
 END
 $$ LANGUAGE plpgsql;
@@ -130,6 +135,7 @@ DECLARE available_2 BOOLEAN;
 DECLARE mail VARCHAR;
 DECLARE timetype VARCHAR;
 DECLARE max INT;
+DECLARE capable BOOLEAN;
 BEGIN
     SELECT s.email, s.timetype, s.maxpetnum into mail, timetype, max
     FROM caretaker as s
@@ -145,14 +151,18 @@ BEGIN
     FROM available as s
     WHERE s.ctemail = mail AND s.avl = true AND s.at BETWEEN NEW.startDate AND NEW.endDate;
 
-    IF unavailable IS NULL AND NEW.success = true THEN
+    SELECT COUNT(*) IS NOT NULL into capable
+    FROM capable c
+    WHERE c.ctemail = mail AND c.type = (SELECT type FROM pet WHERE pet.name = NEW.name);
+
+    IF unavailable IS NULL AND NEW.success = true and capable THEN
         NEW.success = true;
         INSERT INTO caretaker_cares_at
         SELECT NEW.ctemail, NEW.startDate + i, NEW.poemail, NEW.name
         FROM generate_series(0, (select NEW.endDate - NEW.startDate)) i;
     ELSIF NEW.success = false THEN
         NEW.success = false;
-    ELSIF max < 5 THEN
+    ELSIF max < 5 or NOT capable THEN
         NEW.success = null;
         RAISE NOTICE 'cannot accept bid as caretaker is not available for the duration';
     ELSE
