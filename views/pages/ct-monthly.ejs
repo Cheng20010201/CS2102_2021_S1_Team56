@@ -36,7 +36,6 @@
       padding: 15px;
     }
   </style>
-
 </head>
 
 <body>
@@ -44,30 +43,20 @@
   <% include ../partials/nav.ejs %>
   <br><br><br>
   <div class="table-data">
-    <h1 style="text-align:center;"> My Salary </h1>
+    <h1 style="text-align:center;"> Month Summary </h1>
     <table border="1">
       <tr>
-        <th>Number</th>
-        <th>Month</th>
-        <th>Salary</th>
+        <th>Number of Cares</th>
+        <th>Number of Pets</th>
+        <th>Number of Pet Days</th>
+        <th>Salary So Far</th>
       </tr>
-
-      <%
-            if(userData.length!=0){
-            var i=1;
-            userData.forEach(function(data){
-            %>
       <tr>
-        <td><%=i; %></td>
-        <td><%=data.month %></td>
-        <td><%=data.salary?data.salary: 0 %></td>
+        <td><%=data.care %></td>
+        <td><%=data.pet %></td>
+        <td><%=data.petday %></td>
+        <td><%=data.salary %></td>
       </tr>
-      <%  i++; }) %>
-      <% } else{ %>
-      <tr>
-        <td colspan="3">No Data Found</td>
-      </tr>
-      <% } %>
     </table>
   </div>
 

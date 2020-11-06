@@ -73,8 +73,8 @@ app.get('/petOwner/history', petOwner.history);
 app.get('/petOwner/review/:id', petOwner.review);
 app.post('/petOwner/review/saveReview', petOwner.saveReview);
 app.get('/petOwner/pets', petOwner.pets);
-app.get('/petOwner/addpet', petOwner.addPet);
-app.get('/petOwner/pets/:name', petOwner.petsProfile);
+app.get('/petOwner/pets/add', petOwner.addPet);
+app.get('/petOwner/pets/profile/:name', petOwner.petsProfile);
 app.post('/petOwner/pets/saveProfile', petOwner.savePetProfile);
 app.post('/petOwner/pets/addProfile', petOwner.addPetProfile);
 app.get('/petOwner/bids', petOwner.book);
@@ -82,6 +82,7 @@ app.post('/petOwner/bids/searchCareTaker', petOwner.searchCareTaker);
 app.get('/petOwner/bids/:name', petOwner.selectCareTaker);
 app.get('/petOwner/bidinfo', petOwner.bidInfo);
 app.get('/petOwner/bidinfo/confirm', petOwner.confirmBidInfo);
+app.get('/petOwner/nearby', petOwner.findNearby);
 
 // functions for care takers
 app.get('/careTaker/profile', careTaker.profile);
@@ -91,5 +92,6 @@ app.get('/careTaker/salary', careTaker.salary);
 app.get('/careTaker/bids', careTaker.book);
 app.get('/careTaker/bids/acc/:id', careTaker.accept);
 app.get('/careTaker/bids/rej/:id', careTaker.reject);
+app.get('/careTaker/thismonth', careTaker.monthly);
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));

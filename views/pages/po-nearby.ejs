@@ -44,18 +44,12 @@
   <% include ../partials/nav.ejs %>
   <br><br><br>
   <div class="table-data">
-    <h1 style="text-align:center;"> Manage My Bids </h1>
+    <h1 style="text-align:center;"> Nearby Users </h1>
     <table border="1">
       <tr>
         <th>Number</th>
-        <th>Pet</th>
-        <th>Pet Type</th>
-        <th>Date</th>
-        <th>Duration</th>
-        <th>Pet Owner</th>
-        <th>Price Offer</th>
-        <th>Accept</th>
-        <th>Reject</th>
+        <th>Email</th>
+        <th>Name</th>
       </tr>
 
       <%
@@ -65,25 +59,16 @@
             %>
       <tr>
         <td><%=i; %></td>
+        <td><%=data.email %></td>
         <td><%=data.name %></td>
-        <td><%=data.type %></td>
-        <td><%=data.startdate %></td>
-        <td><%=data.duration %></td>
-        <td><%=data.poemail %></td>
-        <td><%=data.price %></td>
-        <td><a href="/caretaker/bids/acc/<%=i; %>">
-            Accept </a></td>
-        <td><a href="/caretaker/bids/rej/<%=i; %>">
-            Reject </a></td>
       </tr>
       <%  i++; }) %>
       <% } else{ %>
       <tr>
-        <td colspan="9">No Data Found</td>
+        <td colspan="3">No Data Found</td>
       </tr>
       <% } %>
     </table>
-    <br><br>
   </div>
 
 </body>

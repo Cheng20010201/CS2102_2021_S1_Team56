@@ -171,3 +171,28 @@ exports.reject = (req, res) => {
         res.redirect("/login");
     }
 };
+
+exports.monthly = async (req, res) => {
+    if (req.session.loggedin) {
+        try {
+            /*
+			const client = await global.pool.connect();
+			var GET_MONTHLY = // help me out
+            var result = await client.query(GET_MONTHLY);
+            var summary = result.rows;
+            */
+			var summary = {
+                care: 20,
+                pet: 17,
+                petday: 58,
+                salary: 1920
+            }
+			res.render("pages/ct-monthly", { data: summary });
+		} catch (err) {
+			console.log(err);
+			res.send("Possible database error.");
+		}
+    } else {
+        res.redirect("/login");
+    }
+}

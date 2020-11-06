@@ -68,7 +68,7 @@
         <td><%=data.gender?'male':'female' %></td>
         <td><%=data.age %></td>
         <td><%=data.req %></td>
-        <td><a href="/petowner/pets/<%=data.name%>">
+        <td><a href="/petowner/pets/profile/<%=data.name%>">
             Edit </a></td>
       </tr>
       <%  i++; }) %>
@@ -80,7 +80,7 @@
     </table>
     <br><br>
     <div style="text-align: center;">
-      <a style="font-size: large;" href="/petOwner/addpet"></span> Add Pet </a>
+      <a style="font-size: large;" href="/petOwner/pets/add"></span> Add Pet </a>
     </div>
   </div>
 
