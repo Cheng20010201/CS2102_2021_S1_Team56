@@ -55,19 +55,30 @@ WHERE s.ctemail = 'placeholder';
 SELECT count(/*'(placeholder)' as cte*/ s.ctemail)
 FROM caretaker_cares_at as s
 WHERE s.ctemail = 'placeholder' and EXTRACT (MONTH FROM s.at) = /*placeholder month number*/ 1;
--- (b) Their expected salary for this month
-SELECT sum(b.price * 0.75)
-FROM bids as b, caretaker as c
-WHERE b.ctemail = 'placeholder' and c.email = 'placeholder' and c.timetype = 'part-time' and b.success = true and EXTRACT (MONTH FROM b.endDate) = /*placeholder month number*/ 1;
-
-SELECT  bonus,
-        CASE bonus WHEN NULL then 3000
-        ELSE bonus + 3000
-        END
-FROM (SELECT sum(b.price * 0.8)
-        FROM bids as b, caretaker as c
-        WHERE b.ctemail = 'placeholder' and c.email = 'placeholder' and c.timetype = 'full-time' and b.success = true and EXTRACT (MONTH FROM b.endDate) = /*placeholder month number*/ 1
-        OFFSET 60) as bonus
+-- -- (b) Their expected salary for this month
+CREATE OR REPLACE FUNCTION calc_salary(mail VARCHAR, month INT, year INT) RETURNS NUMERIC AS $$
+DECLARE salary NUMERIC;
+DECLARE ttype VARCHAR;
+BEGIN
+    SELECT timetype into ttype FROM caretaker WHERE email = mail;
+    IF ttype = 'part time' THEN
+        SELECT sum(b.price * (b.endDate - b.startDate + 1) * 0.75) into salary
+        FROM bids as b
+        WHERE b.ctemail = mail and b.success = true and EXTRACT (MONTH FROM b.endDate) = month and EXTRACT (YEAR FROM b.endDate) = year;
+    ELSIF ttype = 'full time' THEN
+        SELECT  CASE WHEN SUM(bonus.price) IS NULL then 3000
+                ELSE SUM(bonus.price) + 3000
+                END into salary
+        FROM (SELECT c.ctemail, c.at, c.pet_owner, c.pet_name, b.price
+        FROM caretaker_cares_at as c JOIN bids as b on b.ctemail = c.ctemail and b.success and b.poemail = c.pet_owner and b.name = c.pet_name and c.at BETWEEN b.startDate AND b.endDate
+        WHERE c.ctemail = mail and EXTRACT (MONTH FROM c.at) = month and EXTRACT (YEAR FROM c.at) = year
+        OFFSET 60) as bonus;
+    ELSE
+        return null;
+    END IF;
+    RETURN salary;
+END;
+$$ LANGUAGE plpgsql;
 -- (c) etc.
 -- Before inserting a bid, check if the caretaker is free from start to end. (zhizhi)
 -- If caretaker is free and full-time, set successful, insert to caretaker_cares_at
