@@ -20,7 +20,7 @@ exports.tryLogin = async (req, res) => {
 				} else if (type == 'careTaker') {
 					CHECK_TYPE = `SELECT 1 FROM caretaker WHERE email='${email}';`;
 				} else {
-					CHECK_TYPE = `SELECT 1 FROM pscadmin WHERE email='${email}';`;
+					CHECK_TYPE = `SELECT 1 FROM pcsadmin WHERE email='${email}';`;
 				}
 				result = await client.query(CHECK_TYPE);
 				results = { 'results': (result) ? result.rows : null };

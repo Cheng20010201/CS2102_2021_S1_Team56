@@ -12,12 +12,14 @@ AND caretaker.area = '12345'
 AND caretaker.rating >= 4;
 
 --number of pets taken care of per caretaker
+--lowest(undererforming) caretaker at the top
 SELECT caretaker.cname, caretaker.email, count(*) AS pets
 FROM caretaker INNER JOIN caretaker_cares_at ON
     caretaker.email = caretaker_cares_at.ctemail
 --specify month
 WHERE EXTRACT(MONTH FROM caretaker_cares_at.at) = 10
-GROUP BY caretaker.email;
+GROUP BY caretaker.email
+ORDER BY pets ASC;
 
 --number of pets taken care of per month
 SELECT to_char(at, 'Mon') AS mon, EXTRACT(year FROM at) AS year, count(*)
@@ -76,7 +78,11 @@ CREATE OR REPLACE FUNCTION autoAccept() RETURNS TRIGGER AS $$
 BEGIN
     IF (SELECT COUNT(*)
         FROM NEW INNER JOIN caretaker ON caretaker.email = NEW.ctemail
-        WHERE caretaker.timetype = 'full time') > 0
+        WHERE caretaker.timetype = 'full time') > 0 AND
+        (SELECT COUNT(*)
+         FROM available
+         WHERE available.at >= NEW.startDate AND available.at <= NEW.endDate
+         AND available.ctemail = NEW.ctemail) = (NEW.endDate - NEW.startDate) + 1
     THEN
         UPDATE bids
         SET success = TRUE;
