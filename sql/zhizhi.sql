@@ -69,7 +69,7 @@ BEGIN
         SELECT  CASE WHEN SUM(bonus.price) IS NULL then 3000
                 ELSE SUM(bonus.price) + 3000
                 END into salary
-        FROM (SELECT c.ctemail, c.at, c.pet_owner, c.pet_name, b.price
+        FROM (SELECT DISTINCT c.ctemail, c.at, c.pet_owner, c.pet_name, b.price
         FROM caretaker_cares_at as c JOIN bids as b on b.ctemail = c.ctemail and b.success and b.poemail = c.pet_owner and b.name = c.pet_name and c.at BETWEEN b.startDate AND b.endDate
         WHERE c.ctemail = mail and EXTRACT (MONTH FROM c.at) = month and EXTRACT (YEAR FROM c.at) = year
         OFFSET 60) as bonus;
