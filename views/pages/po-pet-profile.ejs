@@ -51,7 +51,7 @@
       <label>Type:</label><br>
       <input type="text" name="petType" placeholder="Pet Type" value='<%=user.type%>' required>
       <label>Gender:</label><br>
-      <input type="text" name="petGender" placeholder="Pet Gender" value=<%=(user.gender == 'male'? 'male' : 'female')%>>
+      <input type="text" name="petGender" placeholder="Pet Gender" value=<%=user.gender?'male':'female'%>>
       <label>Age:</label><br>
       <input type="number" name="petAge" placeholder="Pet Age" value='<%=user.age%>'>
       <label>Remark:</label><br>

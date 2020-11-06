@@ -217,6 +217,7 @@ exports.searchCareTaker = (req, res) => {
 		req.session.bidInfo = bidInfo;
 
 		// get available caretakers based on bidInfo
+		// order by rating desc
 		var caretakers = [
 			{
 				name: "adi",
@@ -267,6 +268,24 @@ exports.confirmBidInfo = (req, res) => {
 	if (req.session.loggedin) {
 		// write stored values into db
 		res.redirect("/petOwner");
+	} else {
+		res.redirect("/login");
+	}
+};
+
+exports.findNearby = async (req, res) => {
+	if (req.session.loggedin) {
+		// retrive user data
+		try {
+			const client = await global.pool.connect();
+			var GET_NEARBY = `SELECT email, pname AS name FROM petowner WHERE area='${req.session.area}' and email!='${req.session.email}' UNION SELECT email, cname AS name FROM caretaker WHERE area='${req.session.area}' and email!='${req.session.email}'`;
+			var result = await client.query(GET_NEARBY);
+			var nearby = result.rows;
+			res.render("pages/po-nearby", { title: "User List", userData: nearby });
+		} catch (err) {
+			console.log(err);
+			res.send("Possible database error.");
+		}
 	} else {
 		res.redirect("/login");
 	}
