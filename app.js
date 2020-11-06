@@ -26,7 +26,7 @@ global.pool = new Pool({
 */
 	// local
 	// connectionString: 'postgresql://api_user:password@localhost:5432/pet_demo',
-	connectionString: 'postgresql://postgres:abc123456@localhost:5432/project',
+	connectionString: 'postgresql://postgres:abc123456@localhost:5432/postgres',
 	ssl: false
 });
 
