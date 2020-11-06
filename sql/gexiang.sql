@@ -30,6 +30,7 @@ GROUP BY 1,2;
 SELECT salary.ctemail, salary.amount
 FROM salary;
 
+/*
 --updates availability upon successful bid
 CREATE OR REPLACE FUNCTION updateAvailability() RETURNS TRIGGER AS $$
 BEGIN
@@ -42,25 +43,41 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
 CREATE TRIGGER updateAvailability 
     AFTER UPDATE ON bids
     FOR EACH ROW
     EXECUTE FUNCTION updateAvailability();
+*/
 
 --updates caretaker_cares_at table for all dates for the particular caretaker upon successful bid
+--automatically makes caretaker unavailable if pets > maxpetnum
 CREATE OR REPLACE FUNCTION updatePets() RETURNS TRIGGER AS $$
 DECLARE
     d date;
+    c NUMERIC;
+    e NUMERIC;
 BEGIN
     IF NEW.success = TRUE AND OLD.success = FALSE THEN
         d := NEW.startDate;
         WHILE d <= NEW.endDate
-        LOOP
+        LOOP 
             INSERT INTO caretaker_cares_at(ctemail, at, pet_owner, pet_name)
             VALUES(NEW.ctemail, d, NEW.poemail, NEW.name);
+
+            --number of pets taken care of on d (including new bid)
+            SELECT COUNT(*) , MAX(caretaker.maxpetnum) INTO c, e
+            FROM caretaker_cares_at INNER JOIN caretaker ON caretaker_cares_at.ctemail = caretaker.email
+            WHERE caretaker_cares_at.ctemail = NEW.ctemail AND caretaker_cares_at.at = d;
+
+            IF (c >= e) THEN
+                UPDATE available
+                SET avl = FALSE
+                WHERE available.at = d;
+            END IF;
+
             d := d + interval '1 day';
         END LOOP;
+
     END IF;
     RETURN NEW;
 END;
@@ -71,8 +88,7 @@ CREATE TRIGGER updatePets
     FOR EACH ROW
     EXECUTE FUNCTION updatePets();
 
---update availability table if caretaker reaches max number of pets
-
+/*
 --makes bid automatically successful if caretaker is free
 CREATE OR REPLACE FUNCTION autoAccept() RETURNS TRIGGER AS $$
 BEGIN
@@ -82,7 +98,8 @@ BEGIN
         (SELECT COUNT(*)
          FROM available
          WHERE available.at >= NEW.startDate AND available.at <= NEW.endDate
-         AND available.ctemail = NEW.ctemail) = (NEW.endDate - NEW.startDate) + 1
+         AND available.ctemail = NEW.ctemail AND available.avl = TRUE) 
+        = (NEW.endDate - NEW.startDate) + 1
     THEN
         UPDATE bids
         SET success = TRUE;
@@ -94,6 +111,7 @@ CREATE TRIGGER autoAccept
     AFTER INSERT ON bids
     FOR EACH ROW
     EXECUTE FUNCTION autoAccept();
+*/
 
 --maintain non-overlap between admin and po/ct
 CREATE OR REPLACE FUNCTION adminOverlap() RETURNS TRIGGER AS $$
