@@ -22,7 +22,7 @@ GROUP BY caretaker.email
 ORDER BY pets ASC;
 
 --number of pets taken care of per month
-SELECT to_char(at, 'Mon') AS mon, EXTRACT(year FROM at) AS year, count(*)
+SELECT to_char(at, 'Mon') AS month, EXTRACT(year FROM at) AS year, count(*)
 FROM caretaker_cares_at
 GROUP BY 1,2;
 
@@ -30,6 +30,23 @@ GROUP BY 1,2;
 SELECT salary.ctemail, salary.amount
 FROM salary;
 
+CREATE OR REPLACE FUNCTION statistics(month INT, year INT)
+    RETURNS table(ctname VARCHAR, ctemail VARCHAR, total BIGINT, petdays BIGINT, salary NUMERIC)
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+        SELECT caretaker.cname, caretaker.email, count(*),
+                count(a.distinct_dates), calc_salary(caretaker.email, month, year)
+        FROM
+            (SELECT DISTINCT caretaker_cares_at.at AS distinct_dates, caretaker_cares_at.ctemail AS ct
+             FROM caretaker_cares_at) AS a,
+            caretaker INNER JOIN caretaker_cares_at ON caretaker.email = caretaker_cares_at.ctemail
+        WHERE EXTRACT(MONTH FROM caretaker_cares_at.at) = month AND a.ct = caretaker.email
+        GROUP BY caretaker.email
+        ORDER BY total;
+end;
+$$;
 /*
 --updates availability upon successful bid
 CREATE OR REPLACE FUNCTION updateAvailability() RETURNS TRIGGER AS $$
@@ -61,8 +78,6 @@ BEGIN
         d := NEW.startDate;
         WHILE d <= NEW.endDate
         LOOP 
-            INSERT INTO caretaker_cares_at(ctemail, at, pet_owner, pet_name)
-            VALUES(NEW.ctemail, d, NEW.poemail, NEW.name);
 
             --number of pets taken care of on d (including new bid)
             SELECT COUNT(*) , MAX(caretaker.maxpetnum) INTO c, e
@@ -72,7 +87,11 @@ BEGIN
             IF (c >= e) THEN
                 UPDATE available
                 SET avl = FALSE
-                WHERE available.at = d;
+                WHERE available.at = d AND available.ctemail = NEW.ctemail;
+
+                UPDATE bids
+                SET success = FALSE
+                WHERE bids.ctemail = NEW.ctemail AND d BETWEEN bids.startDate AND bids.endDate;
             END IF;
 
             d := d + interval '1 day';
