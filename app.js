@@ -95,4 +95,7 @@ app.get('/careTaker/bids/acc/:id', careTaker.accept);
 app.get('/careTaker/bids/rej/:id', careTaker.reject);
 app.get('/careTaker/thismonth', careTaker.monthly);
 
+//functions for admin
+app.post('/admin/statistics', admin.statistics);
+
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));

@@ -27,7 +27,7 @@ CREATE TABLE caretaker (
   area VARCHAR NOT NULL
 );
 
-CREATE TABLE pscadmin (
+CREATE TABLE pcsadmin (
   email VARCHAR PRIMARY KEY REFERENCES users(email), 
   pname VARCHAR NOT NULL
 ); 
@@ -131,14 +131,14 @@ CREATE TABLE bids (
 );
 
 CREATE TABLE receives_payment (
-  pscEmail VARCHAR NOT NULL REFERENCES pscadmin(email),
+  pcsEmail VARCHAR NOT NULL REFERENCES pcsadmin(email),
   amount NUMERIC(6, 2) NOT NULL CHECK(amount >= 0),
   startDate DATE,
   endDate DATE,
   ctemail VARCHAR,
   name VARCHAR,
   poemail VARCHAR,
-  PRIMARY KEY(pscEmail, startDate, endDate, ctemail, name, poemail),
+  PRIMARY KEY(pcsEmail, startDate, endDate, ctemail, name, poemail),
   FOREIGN KEY(startDate, endDate, ctemail, name, poemail)
   REFERENCES bids(startDate, endDate, ctemail, name, poemail)
 );
