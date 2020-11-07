@@ -144,6 +144,7 @@ exports.addPet = (req, res) => {
 exports.addPetProfile = async (req, res) => {
 	if (req.session.loggedin) {
 		try {
+			// console.log(req.body);
 			// to update values
 			var name = req.body.petName;
 			var type = req.body.petType;

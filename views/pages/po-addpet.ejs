@@ -37,6 +37,15 @@
 			margin-bottom: 20px;
 		}
 
+    .profile select {
+      width: 100%;
+      padding: 20px;
+      border: 3px solid#d9ccee;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+
+
   </style>
 </head>
 
@@ -50,7 +59,22 @@
         <label>Name:</label><br>
         <input type="text" name="petName" placeholder="Pet Name" required>
         <label>Type:</label><br>
-        <input type="text" name="petType" placeholder="Pet Type" required>        
+        <select name="petType" required>
+          <option value="cat">Cat</option>
+          <option value="dog">Dog</option>
+          <option value="mouse">Mouse</option>
+          <option value="squirrel">Squirrel</option>
+          <option value="rabbit">Rabbit</option>
+          <option value="pig">Guinea Pig</option>
+          <option value="ferret">Ferret</option>
+          <option value="bird">Bird</option>
+          <option value="insect">Insect</option>
+          <option value="frog">Frog</option>
+          <option value="turtle">Turtle</option>
+          <option value="fish">Fish</option>
+          <option value="snake">Snake</option>
+          <option value="lizzard">Lizzard</option>
+        </select>        
         <label>Age:</label><br>
         <input type="number" name="petAge" placeholder="Pet Age">
         <label>Gender:</label><br>
