@@ -14,8 +14,6 @@ exports.profile = async (req, res) => {
 			var GET_USER = `SELECT * FROM petowner WHERE email='${req.session.email}'`;
 			var result = await client.query(GET_USER);
 			var tempUser = (result.rows)[0];
-			// since "saveProfiel" must be done after "getProfile", 
-			// then we can just store the data in session for later usage
 			req.session.profileData = tempUser
 			res.render("pages/po-profile", { user: tempUser });
 		} catch (err) {
@@ -279,7 +277,12 @@ exports.findNearby = async (req, res) => {
 		// retrive user data
 		try {
 			const client = await global.pool.connect();
-			var GET_NEARBY = `SELECT email, pname AS name FROM petowner WHERE area='${req.session.area}' and email!='${req.session.email}' UNION SELECT email, cname AS name FROM caretaker WHERE area='${req.session.area}' and email!='${req.session.email}'`;
+			var GET_NEARBY =
+				`SELECT email, pname AS name, 'petowner' AS type FROM petowner WHERE area=(SELECT area FROM petowner WHERE email='${req.session.email}')
+			and email!='${req.session.email}' 
+			UNION 
+			SELECT email, cname AS name, 'caretaker' AS type FROM caretaker WHERE area=(SELECT area FROM petowner WHERE email='${req.session.email}')
+			and email!='${req.session.email}'`;
 			var result = await client.query(GET_NEARBY);
 			var nearby = result.rows;
 			res.render("pages/po-nearby", { title: "User List", userData: nearby });
