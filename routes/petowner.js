@@ -66,30 +66,48 @@ exports.history = async (req, res) => {
 	}
 }
 
-exports.review = (req, res) => {
+exports.review = async (req, res) => {
 	if (req.session.loggedin) {
 		// retrive user data
-		var tempReview = {
-			rating: 4,
-			review: 'my Pikachu was taken good care of'
-		}
+		var i = req.params.id - 1;
+		const client = await global.pool.connect();
+		const GET_RATING = `SELECT b.rating, b.reviews FROM bids as b WHERE b.poemail='${req.session.email}' and b.success=true;`;
+		var result = (await client.query(GET_RATING)).rows;
+		const tempReview = result[i];
+
+		const GET_BIDS = `SELECT b.name, b.startdate, b.duration, b.ctemail, b.price FROM bids as b WHERE b.poemail='${req.session.email}' and b.success=true;`;
+		result = (await client.query(GET_BIDS)).rows;
+		// a hack here
+		req.session.pet = { name: '', date: '' };
+		req.session.pet.name = result[i].name;
+		req.session.pet.date = result[i].startdate;
+		// console.log(result[i]);
+		// console.log(req.session.pet);
 		res.render("pages/po-review", { user: tempReview });
 	} else {
 		res.redirect("/login");
 	}
 }
 
-exports.saveReview = (req, res) => {
+exports.saveReview = async (req, res) => {
 	if (req.session.loggedin) {
 		try {
-			// to update values
-			console.log(req.body);
+			const client = await global.pool.connect();
 			var rating = req.body.rating;
 			var review = req.body.review;
-
+			var name = req.session.pet.name;
+			var date = req.session.pet.date.substring(0, 10);
+			req.session.pet = undefined;
+			var email = req.session.email;
+			// console.log(date);
+			const UPDATE_RATING = `
+			UPDATE bids SET rating=${rating}, reviews='${review}' WHERE poemail='${email}' AND 
+			name='${name}' AND startDate=(date('${date}')+1);`;
+			client.query(UPDATE_RATING);
+			res.redirect('/petowner');
 		} catch (err) {
 			console.log(err);
-			res.send('Update failure.');
+			res.send('Update failure. You need to make sure that the rating is in range.');
 		}
 	} else {
 		res.redirect("/login");

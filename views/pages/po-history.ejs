@@ -68,12 +68,12 @@
         <td><%=data.duration %></td>
         <td><%=data.ctemail %></td>
         <td><%=data.price %></td>
-        <td><a href="/petowner/review/<%=data.id%>"> Review </a></td>
+        <td><a href="/petowner/review/<%=i; %>"> Review </a></td>
       </tr>
       <%  i++; }) %>
       <% } else{ %>
       <tr>
-        <td colspan="7">No Data Found</td>
+        <td colspan=" 7">No Data Found</td>
       </tr>
       <% } %>
     </table>

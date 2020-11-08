@@ -1,5 +1,5 @@
 exports.tryLogin = async (req, res) => {
-	/*try {
+	try {
 		const client = await global.pool.connect();
 		var email = req.body.userEmail;
 		var password = req.body.userPassword;
@@ -40,9 +40,11 @@ exports.tryLogin = async (req, res) => {
 	} catch (err) {
 		console.log(err);
 		res.send('Unexpected error.');
-	}*/
-	req.session.loggedin = true;
+	}
+	
+	/*req.session.loggedin = true;
 	req.session.email = 'e0493630@u.nus.edu';
 	req.session.type = 'petowner';
-	res.redirect('/petowner');
+	res.redirect('/petowner');*/
+	
 };
