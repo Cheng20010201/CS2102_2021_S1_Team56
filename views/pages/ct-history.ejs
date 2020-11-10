@@ -53,6 +53,7 @@
         <th>Pet Owner</th>
         <th>Price</th>
         <th>Rating</th>
+        <th>Reviews</th>
       </tr>
 
       <%
@@ -68,6 +69,7 @@
         <td><%=data.poemail %></td>
         <td><%=data.price %></td>
         <td><%=data.rating?data.rating:'---'%></td>
+        <td><%=data.reviews?data.reviews:'---'%></td>
       </tr>
       <%  i++; }) %>
       <% } else{ %>

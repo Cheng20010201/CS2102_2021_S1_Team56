@@ -136,4 +136,16 @@ INSERT INTO bids
 VALUES
 ('2020-11-10', '2020-11-11', 'sunyuchengsyc@163.com', 'f', 'e0493630@u.nus.edu', 2, 'physical', 'cash', 60.00);
 
+-- salary test data insertion
+-- first need to receives_payment
+INSERT INTO receives_payment 
+VALUES 
+('a@admin.com', 60, '2020-11-10', '2020-11-11', 'sunyuchengsyc@163.com', 'a', 'e0493630@u.nus.edu');
 
+INSERT INTO receives_payment 
+VALUES 
+('a@admin.com', 60, '2020-11-12', '2020-11-15', 'sunyuchengsyc@163.com', 'd', 'e0493630@u.nus.edu');
+
+-- then can just add salary, assuming we have reached the end of month
+-- currently the entry is dummy :/
+INSERT INTO salary VALUES ('sunyuchengsyc@163.com', 120, 2020, 11);

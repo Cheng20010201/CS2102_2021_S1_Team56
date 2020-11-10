@@ -48,6 +48,7 @@
     <table border="1">
       <tr>
         <th>Number</th>
+        <th>Year</th>
         <th>Month</th>
         <th>Salary</th>
       </tr>
@@ -59,8 +60,9 @@
             %>
       <tr>
         <td><%=i; %></td>
+        <td><%=data.year %></td>
         <td><%=data.month %></td>
-        <td><%=data.salary?data.salary: 0 %></td>
+        <td><%=data.amount?data.amount: 0 %></td>
       </tr>
       <%  i++; }) %>
       <% } else{ %>

@@ -41,10 +41,10 @@ exports.tryLogin = async (req, res) => {
 		console.log(err);
 		res.send('Unexpected error.');
 	}
-	
-	/*req.session.loggedin = true;
-	req.session.email = 'e0493630@u.nus.edu';
-	req.session.type = 'petowner';
-	res.redirect('/petowner');*/
+	/*
+	req.session.loggedin = true;
+	req.session.email = 'sunyuchengsyc@163.com';
+	req.session.type = 'caretaker';
+	res.redirect('/caretaker');*/
 	
 };

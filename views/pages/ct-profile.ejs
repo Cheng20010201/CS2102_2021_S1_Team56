@@ -28,14 +28,14 @@
     }
 
     .profile label {
-			text-align: left;
-			width: 100%;
-			color: #4d4d4d;
-			font-size: 16px;
-			font-weight: lighter;
-			font-family: Arial, Helvetica, sans-serif;
-			margin-bottom: 20px;
-		}
+      text-align: left;
+      width: 100%;
+      color: #4d4d4d;
+      font-size: 16px;
+      font-weight: lighter;
+      font-family: Arial, Helvetica, sans-serif;
+      margin-bottom: 20px;
+    }
 
     table,
     td,
@@ -73,23 +73,26 @@
       <label>Living Area:</label>
       <input type="text" name="userArea" placeholder="My Living Area" value='<%=user.area%>' required>
       <label>Tel Number:</label>
-      <input type="tel" name="userTel" placeholder="My Telephone" value='<%=user.phonenum%>' required>      
+      <input type="tel" name="userTel" placeholder="My Telephone" value='<%=user.phonenum%>' required>
       <label>Other Information:</label>
       <table border="1" class="table-data">
         <tr>
-          <th>Work Time</th>
+          <th>Total Pet Days</th>
           <th>Rating</th>
-          <th>Pet Count</th>
+          <th>Max Pet Number</th>
+          <th>Employee Type</th>
         </tr>
         <tr>
-          <td><%=user.worktime%></td>
+          <td><%=user.petday%></td>
           <td><%=user.rating%></td>
-          <td><%=user.petnum%></td>
+          <td><%=user.maxpetnum%></td>
+          <td><%=user.timetype%></td>
         </tr>
-      </table>  
+      </table>
       <br><br>
       <input type="submit" class="btn btn-lg btn-primary" style="background-color: #532f8c;">
-      <a type="button" class="btn btn-lg btn-primary" style="background-color: #4d4d4d;" href="/caretaker"></span> Return
+      <a type="button" class="btn btn-lg btn-primary" style="background-color: #4d4d4d;" href="/caretaker"></span>
+        Return
       </a>
     </form>
   </div>
