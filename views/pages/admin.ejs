@@ -10,15 +10,23 @@
   <br><br><br>
   <h2 style="text-align:center;"> Logged in as admin</h2>
   <br><br><br>
-  <h3 style="text-align:center;"> Check statistics</h3>
-  <br><br><br>
+  <h3 style="text-align:center;"> Check statistics by month</h3>
+  <br><br>
   <form style="text-align:center;" action="/admin/statistics" method="POST">
     <input type="number" name="month" placeholder="Month in numbers" required />
     <input type="number" name="year" placeholder="Year in numbers" required />
-    <br>
-    <br>
+    <br><br>
     <input type="submit" class="btn btn-lg btn-primary" style="background-color: #532f8c" value="Check" />
   </form>
+  <br><br>
+  <h3 style="text-align:center;"> Check statistics by email</h3>
+  <br><br>
+  <form style="text-align:center;" action="/admin/statsct" method="POST">
+    <input type="text" name="email" placeholder="Caretaker email" required />
+    <br><br>
+    <input type="submit" class="btn btn-lg btn-primary" style="background-color: #532f8c" value="Check" />
+  </form>
+
 
 </body>
 </html>

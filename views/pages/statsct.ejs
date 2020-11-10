@@ -44,12 +44,12 @@
   <% include ../partials/nav.ejs %>
   <br><br><br>
   <div class="table-data">
-    <h1 style="text-align:center;"> Statistics by month</h1>
+    <h1 style="text-align:center;"> Statistics for caretaker</h1>
     <table border="1">
       <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Email</th>
+        <th>No.</th>
+        <th>Month</th>
+        <th>Year</th>
         <th>Total pets</th>
         <th>Pet days</th>
         <th>Salary</th>
@@ -62,10 +62,10 @@
             %>
       <tr>
         <td><%=i; %></td>
-        <td><%=data.ctname %></td>
-        <td><%=data.ctemail %></td>
-        <td><%=data.total %></td>
-        <td><%=data.petdays %></td>
+        <td><%=data.month %></td>
+        <td><%=data.year %></td>
+        <td><%=data.total_pets %></td>
+        <td><%=data.pet_days %></td>
         <td><%=data.salary %></td>
       </tr>
       <%  i++; }) %>

@@ -11,5 +11,5 @@ The project is deployed on *Heroku*, click [here]( https://cs2102-2021-s1-team56
 
 - The deployment is configured to be done automatically when there is new change to the master (our default) branch. So just changing the git repo suffices to redeploy the app on the heroku host.
 - Free postgreSQL DB offered by amazon is used, with data storage up to 10,000 entries, DB credentials can be found [here](https://docs.google.com/document/d/1XFaQMwaQB6guT945Vx7K2zpCyFAt2hxqnrqVEQGIHwE/edit?usp=sharing).
-- `git clone` this project to your local machine and enter the directory, and run `node index.js` to have your local server running on port 5000. See the `index.js` file to do some configuration on choosing local db or remote db to connect.
+- `git clone` this project to your local machine and enter the directory, and run `node app.js` to have your local server running on port 5000. See the `app.js` file to do some configuration on choosing local db or remote db to connect.
 
