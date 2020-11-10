@@ -36,17 +36,23 @@ CREATE OR REPLACE FUNCTION statistics(month INT, year INT)
 AS $$
 BEGIN
     RETURN QUERY
-        SELECT caretaker.cname, caretaker.email, count(*),
-                count(a.distinct_dates), calc_salary(caretaker.email, month, year)
+        SELECT caretaker.cname, caretaker.email, count(*) AS total, COUNT(DISTINCT caretaker_cares_at.at),
+            calc_salary(caretaker.email, month, year) AS sal
         FROM
-            (SELECT DISTINCT caretaker_cares_at.at AS distinct_dates, caretaker_cares_at.ctemail AS ct
-             FROM caretaker_cares_at) AS a,
             caretaker INNER JOIN caretaker_cares_at ON caretaker.email = caretaker_cares_at.ctemail
-        WHERE EXTRACT(MONTH FROM caretaker_cares_at.at) = month AND a.ct = caretaker.email
+        WHERE EXTRACT(MONTH FROM caretaker_cares_at.at) = month
+            AND EXTRACT(YEAR FROM caretaker_cares_at.at) = year
         GROUP BY caretaker.email
         ORDER BY total;
 end;
 $$;
+
+SELECT to_char(caretaker_cares_at.at, 'Mon') AS month, EXTRACT(year from caretaker_cares_at.at) AS year,
+        COUNT(*) AS total_pets, COUNT(DISTINCT caretaker_cares_at.at) AS pet_days, calc_salary('ct1',1,2) AS salary
+FROM caretaker_cares_at
+WHERE caretaker_cares_at.ctemail = 'ct1'
+GROUP BY 1,2;
+
 /*
 --updates availability upon successful bid
 CREATE OR REPLACE FUNCTION updateAvailability() RETURNS TRIGGER AS $$
