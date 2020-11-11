@@ -208,8 +208,17 @@ exports.savePetProfile = async (req, res) => {
 }
 
 exports.book = (req, res) => {
+	// get pet names
 	if (req.session.loggedin) {
-		res.render("pages/po-book");
+		var petList = [
+			{
+				name: "Pikachu"
+			}, {
+				name: "Squirtle"
+			}, {
+				name: "Charmander"
+			} ]
+		res.render("pages/po-book", { title: "User List", userData: petList });
 	} else {
 		res.redirect("/login");
 	}
@@ -218,6 +227,7 @@ exports.book = (req, res) => {
 exports.searchCareTaker = (req, res) => {
 	if (req.session.loggedin) {
 		console.log(req.body);
+		var name = req.body.pet;
 		var date = req.body.startDate;
 		var duration = req.body.duration;
 		var price = req.body.price;

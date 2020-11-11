@@ -51,6 +51,15 @@
 			font-weight: bold;
 			color: #ffffff;
 		}
+
+    .book select {
+      width: 100%;
+      padding: 20px;
+      border: 3px solid#d9ccee;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+
   </style>
 </head>
 
@@ -61,6 +70,12 @@
   <div class="book">
     <h1 style="text-align:center;"> Book a Pet Care </h1>
     <form action="/petOwner/bids/searchCareTaker" method="POST">
+      <label>Pet:</label><br>
+      <select name="pet" required>
+      <% userData.forEach(function(data){ %>
+        <option value='<%=data.name %>'><%=data.name %></option>
+      <% }) %>
+      </select>
       <label> Date: </label><br>
       <input type="date" name="startDate" required> <br>
       <label> Duration: </label><br>
