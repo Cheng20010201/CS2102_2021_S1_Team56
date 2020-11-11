@@ -122,10 +122,34 @@ exports.book = async (req, res) => {
     }
 };
 
-exports.accept = (req, res) => {
+exports.accept = async (req, res) => {
     if (req.session.loggedin) {
         // mark bid as successful
         // same hack as in review for pet owner
+        const client = await global.pool.connect();
+        var i = req.params.id - 1;
+        const GET_BID = `
+            SELECT name, startdate, enddate, poemail 
+            FROM bids WHERE ctemail='${req.session.email}' AND (success IS NULL);
+        `;
+        const result = await client.query(GET_BID);
+        var user = (result.rows)[i];
+
+        var temp = { startdate: '', enddate: '' };
+        temp.startdate = user.startdate;
+        temp.enddate = user.enddate;
+
+        user.startdate = temp.startdate.toISOString().substring(0, 10);
+        user.enddate = temp.enddate.toISOString().substring(0, 10);
+        const UPDATE_BID = `
+            UPDATE bids SET success=TRUE WHERE 
+            startdate=(date('${user.startdate}')+1)
+            AND enddate=(date('${user.enddate}')+1)
+            AND name='${user.name}'
+            AND poemail='${user.poemail}'
+            AND ctemail='${req.session.email}'
+        `;
+        client.query(UPDATE_BID);
         console.log("marked as successful");
         res.redirect('/caretaker');
     } else {
@@ -133,10 +157,34 @@ exports.accept = (req, res) => {
     }
 };
 
-exports.reject = (req, res) => {
+exports.reject = async (req, res) => {
     if (req.session.loggedin) {
         // mark bid as unsuccessful
         // same hack as in review for pet owner
+        const client = await global.pool.connect();
+        var i = req.params.id - 1;
+        const GET_BID = `
+            SELECT name, startdate, enddate, poemail 
+            FROM bids WHERE ctemail='${req.session.email}' AND (success IS NULL);
+        `;
+        const result = await client.query(GET_BID);
+        var user = (result.rows)[i];
+
+        var temp = { startdate: '', enddate: '' };
+        temp.startdate = user.startdate;
+        temp.enddate = user.enddate;
+
+        user.startdate = temp.startdate.toISOString().substring(0, 10);
+        user.enddate = temp.enddate.toISOString().substring(0, 10);
+        const UPDATE_BID = `
+            UPDATE bids SET success=FALSE WHERE 
+            startdate=(date('${user.startdate}')+1)
+            AND enddate=(date('${user.enddate}')+1)
+            AND name='${user.name}'
+            AND poemail='${user.poemail}'
+            AND ctemail='${req.session.email}'
+        `;
+        client.query(UPDATE_BID);
         console.log("marked as unsuccessful");
         res.redirect('/caretaker');
     } else {

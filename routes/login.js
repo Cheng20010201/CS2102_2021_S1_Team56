@@ -46,5 +46,5 @@ exports.tryLogin = async (req, res) => {
 	req.session.email = 'sunyuchengsyc@163.com';
 	req.session.type = 'caretaker';
 	res.redirect('/caretaker');*/
-	
+
 };

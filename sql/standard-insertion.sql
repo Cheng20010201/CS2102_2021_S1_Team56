@@ -149,3 +149,40 @@ VALUES
 -- then can just add salary, assuming we have reached the end of month
 -- currently the entry is dummy :/
 INSERT INTO salary VALUES ('sunyuchengsyc@163.com', 120, 2020, 11);
+
+
+-- test bid functionality for part time user
+INSERT INTO users VALUES ('sunyuchengsyc@gmail.com', 000914);
+INSERT INTO caretaker VALUES 
+('sunyuchengsyc@gmail.com', 'sun yu cheng part time', '00000000', NULL, 2, 'part time', 'Kent Ridge');
+INSERT INTO capable VALUES ('sunyuchengsyc@gmail.com', 'cat', 100);
+INSERT INTO capable VALUES ('sunyuchengsyc@gmail.com', 'dog', 100);
+INSERT INTO capable VALUES ('sunyuchengsyc@gmail.com', 'mouse', 100);
+INSERT INTO capable VALUES ('sunyuchengsyc@gmail.com', 'squirrel', 100);
+INSERT INTO capable VALUES ('sunyuchengsyc@gmail.com', 'pig', 100);
+INSERT INTO capable VALUES ('sunyuchengsyc@gmail.com', 'ferret', 100);
+INSERT INTO capable VALUES ('sunyuchengsyc@gmail.com', 'bird', 100);
+INSERT INTO capable VALUES ('sunyuchengsyc@gmail.com', 'insect', 100);
+INSERT INTO capable VALUES ('sunyuchengsyc@gmail.com', 'frog', 100);
+INSERT INTO capable VALUES ('sunyuchengsyc@gmail.com', 'fish', 100);
+INSERT INTO capable VALUES ('sunyuchengsyc@gmail.com', 'snake', 100);
+INSERT INTO capable VALUES ('sunyuchengsyc@gmail.com', 'lizzard', 100);
+INSERT INTO capable VALUES ('sunyuchengsyc@gmail.com', 'turtle', 100);
+INSERT INTO available VALUES ('sunyuchengsyc@gmail.com', '2020-11-21', TRUE);
+INSERT INTO available VALUES ('sunyuchengsyc@gmail.com', '2020-11-22', TRUE);
+INSERT INTO available VALUES ('sunyuchengsyc@gmail.com', '2020-11-23', TRUE);
+INSERT INTO available VALUES ('sunyuchengsyc@gmail.com', '2020-11-24', TRUE);
+INSERT INTO available VALUES ('sunyuchengsyc@gmail.com', '2020-11-25', TRUE);
+INSERT INTO available VALUES ('sunyuchengsyc@gmail.com', '2020-11-26', TRUE);
+INSERT INTO available VALUES ('sunyuchengsyc@gmail.com', '2020-11-27', TRUE);
+INSERT INTO available VALUES ('sunyuchengsyc@gmail.com', '2020-11-28', TRUE);
+INSERT INTO available VALUES ('sunyuchengsyc@gmail.com', '2020-11-29', TRUE);
+INSERT INTO available VALUES ('sunyuchengsyc@gmail.com', '2020-11-30', TRUE);
+INSERT INTO bids 
+(startDate, endDate, ctemail, name, poemail, duration, transfer_method, payment_method, price)
+VALUES
+('2020-11-21', '2020-11-23', 'sunyuchengsyc@gmail.com', 'a', 'e0493630@u.nus.edu', 3, 'deliver', 'cash', 100);
+INSERT INTO bids 
+(startDate, endDate, ctemail, name, poemail, duration, transfer_method, payment_method, price)
+VALUES
+('2020-11-21', '2020-11-22', 'sunyuchengsyc@gmail.com', 'b', 'e0493630@u.nus.edu', 2, 'pickup', 'card', 100);
