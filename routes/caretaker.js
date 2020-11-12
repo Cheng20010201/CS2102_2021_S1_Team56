@@ -197,18 +197,16 @@ exports.monthly = async (req, res) => {
         try {
 
             const client = await global.pool.connect();
-            var GET_MONTHLY = ``;// help me out
-            /*var result = await client.query(GET_MONTHLY);
-            var summary = result.rows;
-            var summary = {
-                year: ??,
-                month: ???,
-                care: 20,
-                pet: 17,
-                petday: 58,
-                salary: 1920
-            }*/
-            res.render("pages/ct-monthly", { data: summary });
+            var GET_STATS_CT = `SELECT to_char(caretaker_cares_at.at, 'Mon') AS month, EXTRACT(year from caretaker_cares_at.at) AS year,
+                                    COUNT(*) AS pet, COUNT(DISTINCT caretaker_cares_at.at) AS petday, 
+                                    calc_salary('${req.session.email}',1,2) AS salary
+                                FROM caretaker_cares_at
+                                WHERE caretaker_cares_at.ctemail = '${req.session.email}'
+                                GROUP BY 1,2;
+                                `;
+            var result = (await client.query(GET_STATS_CT)).rows;
+            console.log(result);
+            res.render("pages/ct-monthly", { userData: result });
         } catch (err) {
             console.log(err);
             res.send("Possible database error.");
