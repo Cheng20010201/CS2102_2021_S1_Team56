@@ -364,3 +364,34 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER check_creditnum
 BEFORE
 INSERT ON bids FOR EACH ROW EXECUTE PROCEDURE check_creditnum();
+                                 
+-- function that takes in ctemail, start date and duration to check if caretaker is available
+-- duration includes the start date so 2020-11-05 duration 3 checks 2020-11-05, 2020-11-06, 2020-11-07
+CREATE OR REPLACE FUNCTION available(ctmail VARCHAR, start DATE, duration INT) RETURNS BOOLEAN AS $$
+    DECLARE counter INT = 0;
+    DECLARE available BOOLEAN = true;
+    DECLARE pets INT = 0;
+    DECLARE max INT = 2;
+BEGIN
+    SELECT maxpetnum into max
+    FROM caretaker
+    WHERE email = ctmail;
+    LOOP
+        exit when counter >= duration;
+        IF (SELECT a.at
+        FROM available as a
+        WHERE a.ctemail = ctmail AND a.at = start + counter) IS NULL THEN
+            available = false;
+        END IF;
+        SELECT COUNT(*) into pets
+        FROM caretaker_cares_at as c
+        WHERE c.ctemail = ctmail AND c.at = start + counter;
+        RAISE NOTICE '% % % %', counter, start + counter, available, pets;
+        IF NOT available OR (pets IS NOT NULL AND pets >= max) THEN
+            RETURN FALSE;
+        END IF;
+        counter = counter + 1;
+    END LOOP;
+    RETURN TRUE;
+END;
+$$ LANGUAGE plpgsql;
