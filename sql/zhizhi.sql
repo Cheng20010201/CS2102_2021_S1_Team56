@@ -84,6 +84,7 @@ $$ LANGUAGE plpgsql;
 -- If caretaker is free and full-time, set successful, insert to caretaker_cares_at
 -- If caretaker is free and part-time, set not successful (yet)
 -- If caretaker is not free, raise exception
+/*
 CREATE OR REPLACE FUNCTION check_available_before_insert() RETURNS TRIGGER AS $$
 DECLARE unavailable BOOLEAN;
 DECLARE available_2 BOOLEAN;
@@ -186,6 +187,144 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER check_available_before_update
 BEFORE
 UPDATE ON bids FOR EACH ROW EXECUTE PROCEDURE check_available_before_update();
+*/
+-- (c) etc.
+-- Before inserting a bid, check if the caretaker is free from start to end. (zhizhi)
+-- If caretaker is free and full-time, set successful, insert to caretaker_cares_at
+-- If caretaker is free and part-time, set not successful (yet)
+-- If caretaker is not free, raise exception
+CREATE OR REPLACE FUNCTION check_available_before_insert() RETURNS TRIGGER AS $$
+DECLARE available BOOLEAN;
+DECLARE available_2 BOOLEAN;
+DECLARE mail VARCHAR;
+DECLARE timetype VARCHAR;
+DECLARE max INT;
+DECLARE count INT;
+DECLARE capable BOOLEAN;
+BEGIN
+    SELECT s.email, s.timetype, s.maxpetnum into mail, timetype, max
+    FROM caretaker as s
+    WHERE email = NEW.ctemail;
+
+    IF (SELECT (s.at)
+    FROM caretaker_cares_at as s
+    WHERE s.ctemail = mail AND s.at BETWEEN NEW.startDate AND NEW.endDate
+    GROUP BY s.at
+    HAVING count(*) >= max) IS NULL THEN available = true;
+    ELSE
+        available = false;
+    END IF;
+
+    SELECT COUNT(*) into count
+    FROM available as s
+    WHERE s.ctemail = mail AND s.avl = true AND s.at BETWEEN NEW.startDate AND NEW.endDate;
+
+    SELECT count = NEW.endDate - NEW.startDate + 1 into available_2;
+
+    SELECT COUNT(*) > 0 into capable
+    FROM capable c
+    WHERE c.ctemail = mail AND c.type = (SELECT type FROM pet WHERE pet.name = NEW.name);
+
+    IF NOT available OR NOT available_2 OR NOT capable THEN
+        NEW.success = false;
+        -- RAISE NOTICE 'check % and % and %', available, available_2, capable;
+        RETURN NEW;
+    ELSIF available AND available_2 AND capable AND timetype = 'part time' THEN
+        -- RAISE NOTICE 'check % and % %', available, available_2, capable;
+        NEW.success = null;
+        RETURN NEW;
+    ELSIF available AND available_2 AND capable AND timetype = 'full time' THEN
+        -- RAISE NOTICE 'check % and % %', available, available_2, capable;
+        NEW.success = true;
+        INSERT INTO caretaker_cares_at
+        SELECT NEW.ctemail, NEW.startDate + i, NEW.poemail, NEW.name
+        FROM generate_series(0, (select NEW.endDate - NEW.startDate)) i;
+        RETURN NEW;
+    ELSE
+        RAISE exception 'unexpected behaviour % % % %', available, available_2, capable, timetype
+            USING hint = 'please check if timetype is "part time" or "full time" and is capable of this type of pet.';
+    END IF;
+END
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER check_available_before_insert
+BEFORE
+INSERT ON bids FOR EACH ROW EXECUTE PROCEDURE check_available_before_insert();
+
+-- For part-time caretakers, check if available before accepting the bid
+CREATE OR REPLACE FUNCTION check_available_before_update() RETURNS TRIGGER AS $$
+DECLARE unavailable BOOLEAN;
+DECLARE available_2 BOOLEAN;
+DECLARE mail VARCHAR;
+DECLARE timetype VARCHAR;
+DECLARE max INT;
+DECLARE capable BOOLEAN;
+DECLARE isStatusUpdate BOOLEAN;
+BEGIN
+    SELECT s.email, s.timetype, s.maxpetnum into mail, timetype, max
+    FROM caretaker as s
+    WHERE email = NEW.ctemail;
+
+    SELECT timetype = 'part time' AND (OLD.success IS NULL OR NEW.success <> OLD.success ) into isStatusUpdate;
+
+    SELECT s.at IS NOT NULL into unavailable
+    FROM caretaker_cares_at as s
+    WHERE s.ctemail = mail AND s.at BETWEEN NEW.startDate AND NEW.endDate
+    GROUP BY s.at
+    HAVING count(*) >= max;
+
+    SELECT COUNT(*) = NEW.endDate - NEW.startDate + 1 into available_2
+    FROM available as s
+    WHERE s.ctemail = mail AND s.avl = true AND s.at BETWEEN NEW.startDate AND NEW.endDate;
+
+    SELECT COUNT(*) IS NOT NULL into capable
+    FROM capable c
+    WHERE c.ctemail = mail AND c.type = (SELECT type FROM pet WHERE pet.name = NEW.name);
+
+    IF unavailable IS NULL AND NEW.success = true AND capable AND isStatusUpdate THEN
+        NEW.success = true;
+        INSERT INTO caretaker_cares_at
+        SELECT NEW.ctemail, NEW.startDate + i, NEW.poemail, NEW.name
+        FROM generate_series(0, (select NEW.endDate - NEW.startDate)) i;
+    ELSIF NEW.success = false AND isStatusUpdate THEN
+        NEW.success = false;
+        DELETE FROM caretaker_cares_at as c
+        WHERE c.ctemail = OLD.ctemail AND c.pet_owner = OLD.poemail AND c.pet_name = OLD.name AND (c.at BETWEEN OLD.startDate AND OLD.endDate);
+    ELSIF (max < 5 OR NOT capable) AND isStatusUpdate THEN
+        NEW.success = null;
+        RAISE NOTICE 'cannot accept bid for now';
+    ELSIF max >= 5 AND isStatusUpdate THEN
+        NEW.success = false;
+    ELSE
+        NEW.success = OLD.success;
+    END IF;
+    RETURN NEW;
+END
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER check_available_before_update
+BEFORE
+UPDATE ON bids FOR EACH ROW EXECUTE PROCEDURE check_available_before_update();
+
+-- Delete all caretaker_cares_at inserted by the bid when the bid is deleted
+CREATE OR REPLACE FUNCTION delete_relevant_rows() RETURNS TRIGGER AS $$
+DECLARE ctmail VARCHAR;
+DECLARE pomail VARCHAR;
+DECLARE pname VARCHAR;
+DECLARE sDate DATE;
+DECLARE eDATE DATE;
+BEGIN
+    SELECT OLD.ctemail, OLD.poemail, OLD.name, OLD.startDate, OLD.endDate into ctmail, pomail, pname, sDate, eDATE;
+
+    DELETE FROM caretaker_cares_at as c
+    WHERE c.ctemail = ctmail AND c.pet_owner = pomail AND c.pet_name = pname AND (c.at BETWEEN sDate AND eDATE);
+    RETURN OLD;
+END
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_relevant_rows
+AFTER
+DELETE ON bids FOR EACH ROW EXECUTE PROCEDURE delete_relevant_rows();
 
 -- Before inserting to capable, check if price is more than base price;
 CREATE OR REPLACE FUNCTION check_price() RETURNS TRIGGER AS $$
