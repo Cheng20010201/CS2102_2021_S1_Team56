@@ -49,6 +49,7 @@
       <tr>
         <th>Number</th>
         <th>Name</th>
+        <th>Email</th>
         <th>Rating</th>
         <th>Area</th>
         <th>Action</th>
@@ -61,10 +62,11 @@
             %>
       <tr>
         <td><%=i; %></td>
-        <td><%=data.name %></td>
+        <td><%=data.cname %></td>
+        <td><%=data.email %></td>
         <td><%=data.rating %></td>
         <td><%=data.area %></td>
-        <td><a href="/petowner/bids/<%=data.name%>">
+        <td><a href="/petowner/bids/<%=i%>">
             Select </a></td>
       </tr>
       <%  i++; }) %>

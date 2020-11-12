@@ -207,67 +207,77 @@ exports.savePetProfile = async (req, res) => {
 	}
 }
 
-exports.book = (req, res) => {
+exports.book = async (req, res) => {
 	// get pet names
 	if (req.session.loggedin) {
-		var petList = [
-			{
-				name: "Pikachu"
-			}, {
-				name: "Squirtle"
-			}, {
-				name: "Charmander"
-			} ]
-		res.render("pages/po-book", { title: "User List", userData: petList });
+		const client = await global.pool.connect();
+		var GET_PET = `SELECT name FROM pet WHERE poemail='${req.session.email}'`;
+		const result = (await client.query(GET_PET)).rows;
+		res.render("pages/po-book", { title: "User List", userData: result });
 	} else {
 		res.redirect("/login");
 	}
 };
 
-exports.searchCareTaker = (req, res) => {
+exports.searchCareTaker = async (req, res) => {
 	if (req.session.loggedin) {
-		console.log(req.body);
-		var name = req.body.pet;
-		var date = req.body.startDate;
-		var duration = req.body.duration;
-		var price = req.body.price;
-		var transfer = req.body.transfer;
-		var payment = req.body.payment;
-		// the one who initiates this service must be a pet owner
-		var bidInfo = { date: date, duration: duration, price: price, transfer: transfer, payment: payment };
-		bidInfo.date = date;
-		bidInfo.duration = duration;
-		bidInfo.price = price;
-		bidInfo.transfer = transfer;
-		bidInfo.payment = payment;
-		// wrap all information in the 'session', for future usage
-		req.session.bidInfo = bidInfo;
-
-		// get available caretakers based on bidInfo
-		// order by rating desc
-		var caretakers = [
-			{
-				name: "adi",
-				rating: 4.5,
-				area: "Kent Ridge"
-			}, {
-				name: "aaron",
-				rating: 4.3,
-				area: "Downtown Core"
-			}
-		]
-		res.render("pages/po-select-ct", { title: "User List", userData: caretakers });
+		try {
+			var name = req.body.pet;
+			var date = req.body.startDate;
+			var duration = req.body.duration;
+			var price = req.body.price;
+			var transfer = req.body.transfer;
+			var payment = req.body.payment;
+			// hack here
+			var bidInfo = {};
+			bidInfo.name = name;
+			bidInfo.date = date;
+			bidInfo.duration = duration;
+			bidInfo.price = price;
+			bidInfo.transfer = transfer;
+			bidInfo.payment = payment;
+			req.session.bidInfo = {};
+			req.session.bidInfo = bidInfo;
+			/** CT has to be: 1. capable of this type of pet; 2. available for the whole duration */
+			const GET_CT = `
+				SELECT DISTINCT ct.cname, ct.email, ct.rating, ct.area
+				FROM caretaker ct 
+				WHERE ((SELECT type FROM pet WHERE poemail='${req.session.email}' AND name='${name}') IN (SELECT type FROM capable WHERE ctemail=ct.email))
+				AND TRUE; -- to be completed by zhizhi (check available function)
+			`;
+			const client = await global.pool.connect();
+			const result = (await client.query(GET_CT)).rows;
+			res.render("pages/po-select-ct", { title: "User List", userData: result });
+		} catch (err) {
+			res.send("database error");
+			console.log(err);
+		}
 	} else {
 		res.redirect("/login");
 	}
 }
 
-exports.selectCareTaker = (req, res) => {
+exports.selectCareTaker = async (req, res) => {
 	if (req.session.loggedin) {
-		// get the selected care taker		
-		console.log(req.session.bidInfo);
-		res.redirect("/petOwner/bidinfo");
-
+		try {
+			// same hack
+			const index = req.params.id - 1;
+			const GET_CT = `
+				SELECT DISTINCT ct.email, ct.cname
+				FROM caretaker ct 
+				WHERE ((SELECT type FROM pet WHERE poemail='${req.session.email}' AND name='${req.session.bidInfo.name}') IN (SELECT type FROM capable WHERE ctemail=ct.email))
+				AND TRUE; -- to be completed by zhizhi (check available function)
+			`;
+			const client = await global.pool.connect();
+			var temp = ((await client.query(GET_CT)).rows)[index];
+			var ctemail = temp.email;
+			var cname = temp.cname;
+			req.session.bidInfo.caretaker = cname;
+			req.session.bidInfo.ctemail = ctemail;
+			res.redirect("/petOwner/bidinfo");
+		} catch (err) {
+			res.send('possibly database error')
+		}
 	} else {
 		res.redirect("/login");
 	}
@@ -276,25 +286,49 @@ exports.selectCareTaker = (req, res) => {
 exports.bidInfo = (req, res) => {
 	if (req.session.loggedin) {
 		// show stored values
-		var tempBid = [{
-			date: 2020 - 01 - 01,
-			duration: 5,
-			price: 40,
-			transfer: 'deliver',
-			payment: 'cash',
-			caretaker: 'adi'
-		}]
+		var bidInfo = {};
+		bidInfo.date = req.session.bidInfo.date;
+		bidInfo.duration = req.session.bidInfo.duration;
+		bidInfo.price = req.session.bidInfo.price;
+		bidInfo.transfer = req.session.bidInfo.transfer;
+		bidInfo.payment = req.session.bidInfo.payment;
+		bidInfo.caretaker = req.session.bidInfo.caretaker;
+		var tempBid = [bidInfo];
 		res.render("pages/po-bidinfo", { title: "User List", userData: tempBid });
-
 	} else {
 		res.redirect("/login");
 	}
 };
 
-exports.confirmBidInfo = (req, res) => {
+exports.confirmBidInfo = async (req, res) => {
 	if (req.session.loggedin) {
-		// write stored values into db
-		res.redirect("/petOwner");
+		try {
+			const client = await global.pool.connect();
+			const INSERT_BID = `
+					INSERT INTO bids 
+					(startDate, endDate, ctemail, name, poemail, duration, transfer_method, payment_method, price)
+					VALUES
+					('${req.session.bidInfo.date}', 
+					date('${req.session.bidInfo.date}') + ${req.session.bidInfo.duration}, 
+					'${req.session.bidInfo.ctemail}', 
+					'${req.session.bidInfo.name}', 
+					'${req.session.email}', 
+					${req.session.bidInfo.duration}, 
+					'${req.session.bidInfo.transfer}', 
+					'${req.session.bidInfo.payment}', 
+					${req.session.bidInfo.price});
+				`;
+			await client.query(INSERT_BID);
+			req.session.bidInfo = undefined; // life cycle ends
+			res.redirect("/petOwner");
+		} catch (err) {
+			res.send(`
+				Something wrong happens because of one or more of the following: 
+				your bidding price is too low for the selected caretaker;
+				you do not have a credit card yet.
+			`
+			);
+		}
 	} else {
 		res.redirect("/login");
 	}

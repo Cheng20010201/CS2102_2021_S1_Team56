@@ -80,7 +80,7 @@ app.post('/petOwner/pets/saveProfile', petOwner.savePetProfile);
 app.post('/petOwner/pets/addProfile', petOwner.addPetProfile);
 app.get('/petOwner/bids', petOwner.book);
 app.post('/petOwner/bids/searchCareTaker', petOwner.searchCareTaker);
-app.get('/petOwner/bids/:name', petOwner.selectCareTaker);
+app.get('/petOwner/bids/:id', petOwner.selectCareTaker);
 app.get('/petOwner/bidinfo', petOwner.bidInfo);
 app.get('/petOwner/bidinfo/confirm', petOwner.confirmBidInfo);
 app.get('/petOwner/nearby', petOwner.findNearby);
