@@ -186,3 +186,43 @@ INSERT INTO bids
 (startDate, endDate, ctemail, name, poemail, duration, transfer_method, payment_method, price)
 VALUES
 ('2020-11-21', '2020-11-22', 'sunyuchengsyc@gmail.com', 'b', 'e0493630@u.nus.edu', 2, 'pickup', 'card', 100);
+
+-- another set of tests for app bidding functionality (and updated trigger)
+-- the 'later half' of the available table is not used in previous round of testing; can reuse
+
+-- below should be an immediate true, since 'sunyuchengsyc@163.com' is a full time account
+INSERT INTO bids 
+(startDate, endDate, ctemail, name, poemail, duration, transfer_method, payment_method, price)
+VALUES
+('2020-11-18', '2020-11-20', 'sunyuchengsyc@163.com', 'a', 'e0493630@u.nus.edu', 3, 'deliver', 'cash', 60.00);
+
+INSERT INTO bids 
+(startDate, endDate, ctemail, name, poemail, duration, transfer_method, payment_method, price)
+VALUES
+('2020-11-19', '2020-11-20', 'sunyuchengsyc@163.com', 'b', 'e0493630@u.nus.edu', 2, 'pickup', 'cash', 60.00);
+
+INSERT INTO bids 
+(startDate, endDate, ctemail, name, poemail, duration, transfer_method, payment_method, price)
+VALUES
+('2020-11-18', '2020-11-19', 'sunyuchengsyc@163.com', 'c', 'e0493630@u.nus.edu', 2, 'pickup', 'cash', 60.00);
+
+INSERT INTO bids 
+(startDate, endDate, ctemail, name, poemail, duration, transfer_method, payment_method, price)
+VALUES
+('2020-11-18', '2020-11-20', 'sunyuchengsyc@163.com', 'd', 'e0493630@u.nus.edu', 3, 'physical', 'cash', 60.00);
+
+INSERT INTO bids 
+(startDate, endDate, ctemail, name, poemail, duration, transfer_method, payment_method, price)
+VALUES
+('2020-11-18', '2020-11-20', 'sunyuchengsyc@163.com', 'e', 'e0493630@u.nus.edu', 3, 'physical', 'cash', 60.00);
+
+-- below should be an immediate false, since 'sunyuchengsyc@163.com' already reaches the max pet number
+INSERT INTO bids 
+(startDate, endDate, ctemail, name, poemail, duration, transfer_method, payment_method, price)
+VALUES
+('2020-11-19', '2020-11-21', 'sunyuchengsyc@163.com', 'f', 'e0493630@u.nus.edu', 3, 'physical', 'cash', 60.00);
+
+-- for sanity, remove the part-time caring first
+DELETE FROM bids WHERE ctemail='sunyuchengsyc@gmail.com';
+-- OK, the remove trigger newly added by zhizhi works
+
