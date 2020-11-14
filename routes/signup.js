@@ -14,7 +14,7 @@ exports.signUpInit = (req, res) => {
 
 exports.trySignupPo = async (req, res) => {
 	try {
-		const client = await global.pool.connect();
+		const client = global.client;
 		// only need to check: 
 		// phone number is of length 8
 		// whether credit number is defined
@@ -62,7 +62,7 @@ exports.trySignupPo = async (req, res) => {
 
 exports.trySignupCt = async (req, res) => {
 	try {
-		const client = await global.pool.connect();
+		const client = global.client;
 		// only need to check: 
 		// phone number is of length 8
 		// whether credit number is defined

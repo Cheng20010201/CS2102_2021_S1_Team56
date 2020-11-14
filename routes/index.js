@@ -17,7 +17,7 @@ exports.hello = (req, res) => res.send(HELLO);
 // about us
 exports.aboutus = async (req, res) => {
 	try {
-		const client = await global.pool.connect();
+		const client = global.client;
 		const result = await client.query(GET_COLLABORATORS);
 		const results = { 'results': (result) ? result.rows : null };
 		res.render('pages/collaborators', results);

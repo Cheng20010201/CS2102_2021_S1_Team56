@@ -10,7 +10,7 @@ exports.profile = async (req, res) => {
     if (req.session.loggedin) {
         // retrive user data
         try {
-            const client = await global.pool.connect();
+            const client = global.client;
             var GET_USER = `SELECT * FROM caretaker WHERE email='${req.session.email}'`;
             var result = (await client.query(GET_USER)).rows;
             var tempUser = result[0];
@@ -43,7 +43,7 @@ exports.saveProfile = async (req, res) => {
                 res.send('Name, area, phone number cannot be left blank.');
             } else {
                 // be able to update
-                const client = await global.pool.connect();
+                const client = global.client;
                 const UPDATE = `UPDATE caretaker SET cname='${cname}', area='${area}', phonenum='${phonenum}' WHERE email='${req.session.email}';`;
                 await client.query(UPDATE);
                 res.redirect('/caretaker');
@@ -61,7 +61,7 @@ exports.saveProfile = async (req, res) => {
 
 exports.history = async (req, res) => {
     if (req.session.loggedin) {
-        const client = await global.pool.connect();
+        const client = global.client;
         const SELECT =
             `SELECT name, startdate, duration, poemail, price, rating, reviews FROM bids 
             WHERE ctemail='${req.session.email}' 
@@ -77,7 +77,7 @@ exports.salary = async (req, res) => {
     if (req.session.loggedin) {
         // retrive user data
         try {
-            const client = await global.pool.connect();
+            const client = global.client;
             const UPDATE = `SELECT amount, year, month FROM salary WHERE ctemail='${req.session.email}';`;
             const result = (await client.query(UPDATE)).rows;
             res.render("pages/ct-salary", { title: "User List", userData: result });
@@ -94,7 +94,7 @@ exports.book = async (req, res) => {
         // retrive user data
         // retrive pending bidding data
         try {
-            const client = await global.pool.connect();
+            const client = global.client;
             const check_type = `
                 SELECT timetype FROM caretaker WHERE email='${req.session.email}';
             `
@@ -126,7 +126,7 @@ exports.accept = async (req, res) => {
     if (req.session.loggedin) {
         // mark bid as successful
         // same hack as in review for pet owner
-        const client = await global.pool.connect();
+        const client = global.client;
         var i = req.params.id - 1;
         const GET_BID = `
             SELECT name, startdate, enddate, poemail 
@@ -161,7 +161,7 @@ exports.reject = async (req, res) => {
     if (req.session.loggedin) {
         // mark bid as unsuccessful
         // same hack as in review for pet owner
-        const client = await global.pool.connect();
+        const client = global.client;
         var i = req.params.id - 1;
         const GET_BID = `
             SELECT name, startdate, enddate, poemail 
@@ -196,7 +196,7 @@ exports.monthly = async (req, res) => {
     if (req.session.loggedin) {
         try {
 
-            const client = await global.pool.connect();
+            const client = global.client;
             var GET_STATS_CT = `SELECT to_char(caretaker_cares_at.at, 'Mon') AS month, EXTRACT(year from caretaker_cares_at.at) AS year,
                                     COUNT(*) AS pet, COUNT(DISTINCT caretaker_cares_at.at) AS petday, 
                                     calc_salary('${req.session.email}',1,2) AS salary

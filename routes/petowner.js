@@ -10,7 +10,7 @@ exports.profile = async (req, res) => {
 	if (req.session.loggedin) {
 		// retrive user data
 		try {
-			const client = await global.pool.connect();
+			const client = global.client;
 			var GET_USER = `SELECT * FROM petowner WHERE email='${req.session.email}'`;
 			var result = await client.query(GET_USER);
 			var tempUser = (result.rows)[0];
@@ -38,7 +38,7 @@ exports.saveProfile = async (req, res) => {
 				res.send('Name, area, phone number cannot be left blank.');
 			} else {
 				// be able to update
-				const client = await global.pool.connect();
+				const client = global.client;
 				const UPDATE = `UPDATE petowner SET pname='${pname}', area='${area}', phonenum='${phonenum}', creditnum='${creditnum}' WHERE email='${req.session.email}';`;
 				await client.query(UPDATE);
 				res.redirect('/petOwner');
@@ -57,7 +57,7 @@ exports.history = async (req, res) => {
 
 	if (req.session.loggedin) {
 		// retrive user data
-		const client = await global.pool.connect();
+		const client = global.client;
 		const GET_BIDS = `SELECT b.name, b.startdate, b.duration, b.ctemail, b.price FROM bids as b WHERE b.poemail='${req.session.email}' and b.success=true;`;
 		const tempHistory = (await client.query(GET_BIDS)).rows;
 		res.render("pages/po-history", { title: "User List", userData: tempHistory });
@@ -70,7 +70,7 @@ exports.review = async (req, res) => {
 	if (req.session.loggedin) {
 		// retrive user data
 		var i = req.params.id - 1;
-		const client = await global.pool.connect();
+		const client = global.client;
 		const GET_RATING = `SELECT b.rating, b.reviews FROM bids as b WHERE b.poemail='${req.session.email}' and b.success=true;`;
 		var result = (await client.query(GET_RATING)).rows;
 		const tempReview = result[i];
@@ -92,7 +92,7 @@ exports.review = async (req, res) => {
 exports.saveReview = async (req, res) => {
 	if (req.session.loggedin) {
 		try {
-			const client = await global.pool.connect();
+			const client = global.client;
 			var rating = req.body.rating;
 			var review = req.body.review;
 			var name = req.session.pet.name;
@@ -120,7 +120,7 @@ exports.pets = async (req, res) => {
 	if (req.session.loggedin) {
 		// retrive user data
 		try {
-			const client = await global.pool.connect();
+			const client = global.client;
 			var GET_PET = `SELECT * FROM pet WHERE poemail='${req.session.email}'`;
 			var result = await client.query(GET_PET);
 			var pets = result.rows;
@@ -136,7 +136,7 @@ exports.pets = async (req, res) => {
 
 exports.petsProfile = async (req, res) => {
 	if (req.session.loggedin) {
-		const client = await global.pool.connect();
+		const client = global.client;
 		var name = req.params.name;
 		var GET_SINGLE_PET = `SELECT * FROM pet WHERE poemail='${req.session.email}' AND name='${name}';`;
 		var result = await client.query(GET_SINGLE_PET);
@@ -167,7 +167,7 @@ exports.addPetProfile = async (req, res) => {
 			var gender = req.body.petGender == 'male' ? 'TRUE' : req.body.petGender === undefined ? 'UNKNOWN' : 'FALSE';
 			var age = req.body.petAge;
 			var specreq = req.body.specReq;
-			const client = await global.pool.connect();
+			const client = global.client;
 			// here we assume the type already has an entry in table "category"
 			var ADD_PET;
 			if (gender != 'UNKNOWN') {
@@ -210,7 +210,7 @@ exports.savePetProfile = async (req, res) => {
 exports.book = async (req, res) => {
 	// get pet names
 	if (req.session.loggedin) {
-		const client = await global.pool.connect();
+		const client = global.client;
 		var GET_PET = `SELECT name FROM pet WHERE poemail='${req.session.email}'`;
 		const result = (await client.query(GET_PET)).rows;
 		res.render("pages/po-book", { title: "User List", userData: result });
@@ -245,7 +245,7 @@ exports.searchCareTaker = async (req, res) => {
 				WHERE ((SELECT type FROM pet WHERE poemail='${req.session.email}' AND name='${name}') IN (SELECT type FROM capable WHERE ctemail=ct.email))
 				AND (SELECT * FROM available('ct.email', '${date}', ${duration})=TRUE);
 			`;
-			const client = await global.pool.connect();
+			const client = global.client;
 			const result = (await client.query(GET_CT)).rows;
 			res.render("pages/po-select-ct", { title: "User List", userData: result });
 		} catch (err) {
@@ -268,7 +268,7 @@ exports.selectCareTaker = async (req, res) => {
 				WHERE ((SELECT type FROM pet WHERE poemail='${req.session.email}' AND name='${req.session.bidInfo.name}') IN (SELECT type FROM capable WHERE ctemail=ct.email))
 				AND (SELECT * FROM available('ct.email', '${date}', ${duration})=TRUE);
 			`;
-			const client = await global.pool.connect();
+			const client = global.client;
 			var temp = ((await client.query(GET_CT)).rows)[index];
 			var ctemail = temp.email;
 			var cname = temp.cname;
@@ -303,7 +303,7 @@ exports.bidInfo = (req, res) => {
 exports.confirmBidInfo = async (req, res) => {
 	if (req.session.loggedin) {
 		try {
-			const client = await global.pool.connect();
+			const client = global.client;
 			const INSERT_BID = `
 					INSERT INTO bids 
 					(startDate, endDate, ctemail, name, poemail, duration, transfer_method, payment_method, price)
@@ -338,7 +338,7 @@ exports.findNearby = async (req, res) => {
 	if (req.session.loggedin) {
 		// retrive user data
 		try {
-			const client = await global.pool.connect();
+			const client = global.client;
 			var GET_NEARBY =
 				`SELECT email, pname AS name, 'petowner' AS type FROM petowner WHERE area=(SELECT area FROM petowner WHERE email='${req.session.email}')
 			and email!='${req.session.email}' 

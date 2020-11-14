@@ -31,6 +31,7 @@ global.pool = new Pool({
 	// ssl: false
 });
 
+
 // main logic
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
