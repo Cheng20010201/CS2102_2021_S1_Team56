@@ -1,6 +1,6 @@
 /* Demo insertion of names */
 INSERT INTO collaborators 
-VALUES (1, 'Huang Ge Xiang'), (2, 'Sun Yu Cheng'), (3, 'Xu Zhi Zhi'), (4, 'Zhao Huan'), (5, 'Zhang Xin Yi');
+VALUES ('Huang Ge Xiang'), ('Sun Yu Cheng'), ('Xu Zhi Zhi'), ('Zhao Huan'), ('Zhang Xin Yi');
 
 insert into users (email, password) values ('mnield0@reddit.com', 'pi3WccRq');
 insert into users (email, password) values ('fmcavey1@paginegialle.it', 'Rg4L9WGpH');
