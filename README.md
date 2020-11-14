@@ -14,5 +14,5 @@ The project is deployed on *Heroku*, click [here]( https://cs2102-2021-s1-team56
 - `git clone` this project to your local machine and enter the directory, and run `node app.js` to have your local server running on port 5000. See the `app.js` file to do some configuration on choosing local db or remote db to connect.
 
 ## Product Demo
-The demo video can be found [here](https://drive.google.com/file/d/1ak92LaX5IY7ziHV0XTOAf1onxcsSFhir/view?usp=sharing)
+The demo video can be found [here](https://drive.google.com/file/d/1ak92LaX5IY7ziHV0XTOAf1onxcsSFhir/view?usp=sharing).
 
