@@ -14,7 +14,7 @@ exports.statistics = async (req, res) => {
             const client = global.client;
             var month = req.body.month;
             var year = req.body.year;
-            var GET_STATISTICS = `SELECT caretaker.cname AS ctname, caretaker.email AS ctemail, count(*) AS total, COUNT(DISTINCT caretaker_cares_at.at) AS petdays,
+            var GET_STATISTICS = `SELECT caretaker.cname AS ctname, caretaker.email AS ctemail, count(DISTINCT pet_name) AS total, COUNT(DISTINCT caretaker_cares_at.at) AS petdays,
                                         calc_salary(caretaker.email, '${month}','${year}') AS salary
                                     FROM
                                         caretaker INNER JOIN caretaker_cares_at ON caretaker.email = caretaker_cares_at.ctemail
@@ -42,7 +42,7 @@ exports.statsct = async (req, res) => {
             const client = global.client;
             var email = req.body.email;
             var GET_STATS_CT = `SELECT to_char(caretaker_cares_at.at, 'Mon') AS month, EXTRACT(year from caretaker_cares_at.at) AS year,
-                                    COUNT(*) AS total_pets, COUNT(DISTINCT caretaker_cares_at.at) AS pet_days, 
+                                    COUNT(DISTINCT pet_name) AS total_pets, COUNT(DISTINCT caretaker_cares_at.at) AS pet_days, 
                                     calc_salary('${email}',1,2) AS salary
                                 FROM caretaker_cares_at
                                 WHERE caretaker_cares_at.ctemail = '${email}'

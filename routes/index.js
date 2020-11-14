@@ -21,7 +21,6 @@ exports.aboutus = async (req, res) => {
 		const result = await client.query(GET_COLLABORATORS);
 		const results = { 'results': (result) ? result.rows : null };
 		res.render('pages/collaborators', results);
-		client.release();
 	} catch (err) {
 		console.error(err);
 		res.send("Error " + err);

@@ -77,11 +77,19 @@ exports.salary = async (req, res) => {
     if (req.session.loggedin) {
         // retrive user data
         try {
+            const GET_SALARY =
+                `                
+                SELECT to_char(bids.enddate, 'Mon') AS month, EXTRACT(year from bids.enddate) AS year,                
+                (price * 0.75) * (bids.duration::INT) AS amount
+                FROM bids WHERE ctemail='${req.session.email}'
+                AND success=TRUE;
+                `;
             const client = global.client;
-            const UPDATE = `SELECT amount, year, month FROM salary WHERE ctemail='${req.session.email}';`;
-            const result = (await client.query(UPDATE)).rows;
+            const result = (await client.query(GET_SALARY)).rows;
+            console.log(result);
             res.render("pages/ct-salary", { title: "User List", userData: result });
         } catch (err) {
+            console.log(err);
             res.end();
         }
     } else {
@@ -195,12 +203,17 @@ exports.monthly = async (req, res) => {
         try {
 
             const client = global.client;
-            var GET_STATS_CT = `SELECT to_char(caretaker_cares_at.at, 'Mon') AS month, EXTRACT(year from caretaker_cares_at.at) AS year,
-                                    COUNT(*) AS pet, COUNT(DISTINCT caretaker_cares_at.at) AS petday, 
-                                    calc_salary('${req.session.email}',1,2) AS salary
-                                FROM caretaker_cares_at
-                                WHERE caretaker_cares_at.ctemail = '${req.session.email}'
-                                GROUP BY 1,2;
+            var GET_STATS_CT = `
+            
+            SELECT to_char(caretaker_cares_at.at, 'Mon') AS month, EXTRACT(year from caretaker_cares_at.at) AS year,
+            COUNT(DISTINCT pet_name) AS total_pets, COUNT(DISTINCT caretaker_cares_at.at) AS pet_days, 
+            (   SELECT 
+                (price * 0.75)*(bids.duration::INT) AS salary
+                FROM bids WHERE ctemail='${req.session.email}'
+                AND success=TRUE) AS salary
+            FROM caretaker_cares_at
+            WHERE caretaker_cares_at.ctemail = '${req.session.email}'
+            GROUP BY 1,2;
                                 `;
             var result = (await client.query(GET_STATS_CT)).rows;
             console.log(result);
