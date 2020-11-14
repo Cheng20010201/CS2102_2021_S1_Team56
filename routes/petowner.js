@@ -102,7 +102,7 @@ exports.saveReview = async (req, res) => {
 			// console.log(date);
 			const UPDATE_RATING = `
 			UPDATE bids SET rating=${rating}, reviews='${review}' WHERE poemail='${email}' AND 
-			name='${name}' AND startDate=(date('${date}')+1);`;
+			name='${name}' AND startDate=(date('${date}'));`;
 			client.query(UPDATE_RATING);
 			res.redirect('/petowner');
 		} catch (err) {
