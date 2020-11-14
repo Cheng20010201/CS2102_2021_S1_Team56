@@ -61,11 +61,8 @@ DECLARE salary NUMERIC;
 DECLARE ttype VARCHAR;
 BEGIN
     SELECT timetype into ttype FROM caretaker WHERE email = mail;
-    IF ttype = 'part time' THEN
-        SELECT sum(b.price * (b.duration::INT) * 0.75) into salary
-        FROM bids as b
-        WHERE b.ctemail = mail and b.success = true and EXTRACT (MONTH FROM b.endDate) = month and EXTRACT (YEAR FROM b.endDate) = year;
-    ELSIF ttype = 'full time' THEN
+    
+    IF ttype = 'full time' THEN
         SELECT  CASE WHEN SUM(bonus.price) IS NULL then 3000
                 ELSE SUM(bonus.price * 0.8) + 3000
                 END into salary
@@ -74,7 +71,9 @@ BEGIN
         WHERE c.ctemail = mail and EXTRACT (MONTH FROM c.at) = month and EXTRACT (YEAR FROM c.at) = year
         OFFSET 60) as bonus;
     ELSE
-        return null;
+        SELECT sum(b.price * (b.duration::INT) * 0.75) into salary
+        FROM bids as b
+        WHERE b.ctemail = mail and b.success = true and EXTRACT (MONTH FROM b.endDate) = month and EXTRACT (YEAR FROM b.endDate) = year;
     END IF;
     RETURN salary;
 END;
