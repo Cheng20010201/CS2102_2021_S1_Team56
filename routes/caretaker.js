@@ -143,8 +143,7 @@ exports.accept = async (req, res) => {
         user.enddate = temp.enddate.toISOString().substring(0, 10);
         const UPDATE_BID = `
             UPDATE bids SET success=TRUE WHERE 
-            startdate=(date('${user.startdate}')+1)
-            AND enddate=(date('${user.enddate}')+1)
+            startdate=(date('${user.startdate}'))
             AND name='${user.name}'
             AND poemail='${user.poemail}'
             AND ctemail='${req.session.email}'
@@ -179,7 +178,6 @@ exports.reject = async (req, res) => {
         const UPDATE_BID = `
             UPDATE bids SET success=FALSE WHERE 
             startdate=(date('${user.startdate}')+1)
-            AND enddate=(date('${user.enddate}')+1)
             AND name='${user.name}'
             AND poemail='${user.poemail}'
             AND ctemail='${req.session.email}'
