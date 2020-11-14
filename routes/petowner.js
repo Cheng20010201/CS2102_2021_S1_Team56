@@ -266,7 +266,7 @@ exports.selectCareTaker = async (req, res) => {
 				SELECT DISTINCT ct.email, ct.cname
 				FROM caretaker ct 
 				WHERE ((SELECT type FROM pet WHERE poemail='${req.session.email}' AND name='${req.session.bidInfo.name}') IN (SELECT type FROM capable WHERE ctemail=ct.email))
-				AND (SELECT * FROM available(ct.email, '${date}', ${duration}))=TRUE;
+				AND (SELECT * FROM available(ct.email, '${req.session.bidInfo.date}', ${req.session.bidInfo.duration}))=TRUE;
 			`;
 			const client = global.client;
 			var temp = ((await client.query(GET_CT)).rows)[index];
@@ -276,6 +276,7 @@ exports.selectCareTaker = async (req, res) => {
 			req.session.bidInfo.ctemail = ctemail;
 			res.redirect("/petOwner/bidinfo");
 		} catch (err) {
+			console.log(err);
 			res.send('possibly database error')
 		}
 	} else {
