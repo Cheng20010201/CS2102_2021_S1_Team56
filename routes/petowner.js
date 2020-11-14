@@ -310,7 +310,7 @@ exports.confirmBidInfo = async (req, res) => {
 					(startDate, endDate, ctemail, name, poemail, duration, transfer_method, payment_method, price)
 					VALUES
 					('${req.session.bidInfo.date}', 
-					date('${req.session.bidInfo.date}') + ${req.session.bidInfo.duration}, 
+					date('${req.session.bidInfo.date}') + ${req.session.bidInfo.duration} - 1, 
 					'${req.session.bidInfo.ctemail}', 
 					'${req.session.bidInfo.name}', 
 					'${req.session.email}', 

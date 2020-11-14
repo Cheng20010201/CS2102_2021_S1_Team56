@@ -2,8 +2,8 @@ const HELLO = 'Hello, this is CS2102 group 56!'
 const GET_COLLABORATORS = 'SELECT * FROM collaborators;';
 
 // homepage
-exports.home = (req, res) => {
-
+exports.home = async (req, res) => {
+	global.client = await global.pool.connect();
 	if (req.session.loggedin) {
 		res.redirect(`/${req.session.type}`);
 	} else {

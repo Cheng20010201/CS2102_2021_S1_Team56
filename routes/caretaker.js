@@ -185,7 +185,7 @@ exports.reject = async (req, res) => {
         user.enddate = temp.enddate.toISOString().substring(0, 10);
         const UPDATE_BID = `
             UPDATE bids SET success=FALSE WHERE 
-            startdate=(date('${user.startdate}'))
+            startdate=date('${user.startdate}')
             AND name='${user.name}'
             AND poemail='${user.poemail}'
             AND ctemail='${req.session.email}'
@@ -207,10 +207,7 @@ exports.monthly = async (req, res) => {
             
             SELECT to_char(caretaker_cares_at.at, 'Mon') AS month, EXTRACT(year from caretaker_cares_at.at) AS year,
             COUNT(DISTINCT pet_name) AS total_pets, COUNT(DISTINCT caretaker_cares_at.at) AS pet_days, 
-            (   SELECT 
-                (price * 0.75)*(bids.duration::INT) AS salary
-                FROM bids WHERE ctemail='${req.session.email}'
-                AND success=TRUE) AS salary
+            calc_salary('${req.session.email}', 1, 2) AS salary
             FROM caretaker_cares_at
             WHERE caretaker_cares_at.ctemail = '${req.session.email}'
             GROUP BY 1,2;

@@ -1,7 +1,6 @@
 exports.tryLogin = async (req, res) => {
 	try {
-		// const client = await global.pool.connect();
-		global.client = await global.pool.connect();
+		// const client = await global.pool.connect();		
 		const client = global.client;
 		var email = req.body.userEmail;
 		var password = req.body.userPassword;
